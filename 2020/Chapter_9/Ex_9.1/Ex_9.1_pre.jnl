@@ -1,0 +1,1263 @@
+# -*- coding: mbcs -*-
+from part import *
+from material import *
+from section import *
+from assembly import *
+from step import *
+from interaction import *
+from load import *
+from mesh import *
+from optimization import *
+from job import *
+from sketch import *
+from visualization import *
+from connectorBehavior import *
+mdb.models['Model-1'].ConstrainedSketch(name='LaminateSketch', sheetSize=100.0)
+mdb.models['Model-1'].sketches['LaminateSketch'].rectangle(point1=(0.0, 0.0), 
+    point2=(10.0, 10.0))
+mdb.models['Model-1'].Part(dimensionality=THREE_D, name='Laminate', type=
+    DEFORMABLE_BODY)
+mdb.models['Model-1'].parts['Laminate'].BaseShell(sketch=
+    mdb.models['Model-1'].sketches['LaminateSketch'])
+mdb.models['Model-1'].rootAssembly.Instance(dependent=ON, name='Laminate-1', 
+    part=mdb.models['Model-1'].parts['Laminate'])
+mdb.models['Model-1'].parts['Laminate'].Set(faces=
+    mdb.models['Model-1'].parts['Laminate'].faces, name='WholeLaminate')
+mdb.models['Model-1'].StaticStep(initialInc=0.01, maxInc=0.01, maxNumInc=1000, 
+    minInc=0.0001, name='ApplyStrain', previous='Initial', timePeriod=1.8735)
+mdb.models['Model-1'].fieldOutputRequests['F-Output-1'].setValues(variables=(
+    'U', 'RF', 'SDV'))
+mdb.models['Model-1'].XsymmBC(createStepName='Initial', name='SymmetryX', 
+    region=Region(
+    edges=mdb.models['Model-1'].rootAssembly.instances['Laminate-1'].edges.findAt(
+    ((0.0, 2.5, 0.0), ), )))
+mdb.models['Model-1'].YsymmBC(createStepName='Initial', name='SymmetryY', 
+    region=Region(
+    edges=mdb.models['Model-1'].rootAssembly.instances['Laminate-1'].edges.findAt(
+    ((7.5, 0.0, 0.0), ), )))
+mdb.models['Model-1'].EncastreBC(createStepName='Initial', name=
+    'NoRigidBodyMotion', region=Region(
+    vertices=mdb.models['Model-1'].rootAssembly.instances['Laminate-1'].vertices.findAt(
+    ((0.0, 0.0, 0.0), ), )))
+mdb.models['Model-1'].DisplacementBC(createStepName='ApplyStrain', name=
+    'Strain', region=Region(
+    edges=mdb.models['Model-1'].rootAssembly.instances['Laminate-1'].edges.findAt(
+    ((10.0, 7.5, 0.0), ), )), u1=0.18735)
+mdb.models['Model-1'].DisplacementBC(amplitude=UNSET, createStepName='Initial', 
+    distributionType=UNIFORM, fieldName='', localCsys=None, name='BC-4', 
+    region=Region(
+    faces=mdb.models['Model-1'].rootAssembly.instances['Laminate-1'].faces.findAt(
+    ((3.333333, 3.333333, 0.0), (0.0, 0.0, 1.0)), )), u1=UNSET, u2=UNSET, u3=
+    SET, ur1=SET, ur2=SET, ur3=SET)
+mdb.models['Model-1'].steps['ApplyStrain'].control.setValues(allowPropagation=
+    OFF, displacementField=(0.02, 0.01, 0.0, 0.0, 0.02, 1e-05, 0.001, 1e-08, 
+    1.0, 1e-05, 1e-08), electricalPotentialField=(0.005, 0.01, 0.0, 0.0, 0.02, 
+    1e-05, 0.001, 1e-08, 1.0, 1e-05), hydrostaticFluidPressureField=(0.005, 
+    0.01, 0.0, 0.0, 0.02, 1e-05, 0.001, 1e-08, 1.0, 1e-05), resetDefaultValues=
+    OFF, rotationField=(0.005, 0.01, 0.0, 0.0, 0.02, 1e-05, 0.001, 1e-08, 1.0, 
+    1e-05))
+mdb.models['Model-1'].parts['Laminate'].setElementType(elemTypes=(ElemType(
+    elemCode=S4R, elemLibrary=STANDARD), ), regions=Region(
+    faces=mdb.models['Model-1'].parts['Laminate'].faces.findAt(((3.333333, 
+    3.333333, 0.0), (0.0, 0.0, 1.0)), )))
+mdb.models['Model-1'].parts['Laminate'].seedPart(size=10.0)
+mdb.models['Model-1'].parts['Laminate'].generateMesh()
+mdb.Job(model='Model-1', name='Job-ddm-exe', nodalOutputPrecision=FULL, 
+    numCpus=1, numDomains=8, userSubroutine='abaqusddm-std.obj')
+mdb.models['Model-1'].keywordBlock.synchVersions(storeNodesAndElements=False)
+mdb.models['Model-1'].keywordBlock.insert(5, 
+    '*Shell General Section, elset=WholeLaminate, USER, PROPERTIES=30, VARIABLES=9\n2.736\n0.254,1e16,0,44700,12700,5800,.297,.41,\n3.7,30.,0,0.144,44700,12700,5800,.297,\n.41,3.7,30.,90,1.152,44700,12700,5800,\n.297,.41,3.7,30.,0,0.072\n*Transverse Shear\n1,1,0')
+mdb.models['Model-1'].keywordBlock.insert(32, 
+    '*Initial Conditions, type=SOLUTION, USER')
+mdb.JobFromInputFile(activateLoadBalancing=False, atTime=None, 
+    explicitPrecision=SINGLE, getMemoryFromAnalysis=True, inputFileName=
+    'C:\\SIMULIA\\User\\Job-ddm-exe.inp', memory=90, memoryUnits=PERCENTAGE, 
+    multiprocessingMode=DEFAULT, name='Job-ddm-exe-1', nodalOutputPrecision=
+    SINGLE, numCpus=1, numDomains=1, parallelizationMethodExplicit=DOMAIN, 
+    queue=None, scratch='', type=ANALYSIS, userSubroutine=
+    'C:\\SIMULIA\\User\\abaqusddm-std.obj', waitHours=0, waitMinutes=0)
+mdb.jobs['Job-ddm-exe-1'].submit(consistencyChecking=OFF)
+mdb.jobs['Job-ddm-exe-1']._Message(STARTED, {'phase': BATCHPRE_PHASE, 
+    'clientHost': 'fer-xps-i7', 'handle': 0, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(ERROR, {'phase': BATCHPRE_PHASE, 
+    'message': 'in keyword *TRANSVERSESHEAR, file "Job-ddm-exe.inp", line 26: The keyword is misplaced. It can be suboption for the following keyword(s)/level(s): material', 
+    'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(ABORTED, {'phase': BATCHPRE_PHASE, 
+    'message': 'Analysis phase failed due to errors', 
+    'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(ERROR, {
+    'message': 'Analysis Input File Processor exited with an error.', 
+    'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(JOB_ABORTED, {
+    'message': 'Analysis Input File Processor exited with an error.', 
+    'jobName': 'Job-ddm-exe-1'})
+# Save by ejbarbero on 2021_02_23-12.38.29; build 2020 2019_09_13-13.49.31 163176
+from part import *
+from material import *
+from section import *
+from assembly import *
+from step import *
+from interaction import *
+from load import *
+from mesh import *
+from optimization import *
+from job import *
+from sketch import *
+from visualization import *
+from connectorBehavior import *
+mdb.saveAs(pathName='C:/SIMULIA/User/junk.cae')
+mdb.jobs['Job-ddm-exe-1'].submit(consistencyChecking=OFF)
+mdb.jobs['Job-ddm-exe-1']._Message(STARTED, {'phase': BATCHPRE_PHASE, 
+    'clientHost': 'fer-xps-i7', 'handle': 0, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FILE, {'phase': BATCHPRE_PHASE, 
+    'file': 'C:\\SIMULIA\\User\\Job-ddm-exe-1.odb', 
+    'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(COMPLETED, {'phase': BATCHPRE_PHASE, 
+    'message': 'Analysis phase complete', 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STARTED, {'phase': STANDARD_PHASE, 
+    'clientHost': 'fer-xps-i7', 'handle': 29244, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STEP, {'phase': STANDARD_PHASE, 'stepId': 1, 
+    'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 0, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(MEMORY_ESTIMATE, {'phase': STANDARD_PHASE, 
+    'jobName': 'Job-ddm-exe-1', 'memory': 29.0})
+mdb.jobs['Job-ddm-exe-1']._Message(PHYSICAL_MEMORY, {'phase': STANDARD_PHASE, 
+    'physical_memory': 24568.0, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(MINIMUM_MEMORY, {'minimum_memory': 22.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 1, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STATUS, {'totalTime': 0.01, 'attempts': 1, 
+    'timeIncrement': 0.01, 'increment': 1, 'stepTime': 0.01, 'step': 1, 
+    'jobName': 'Job-ddm-exe-1', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 2, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STATUS, {'totalTime': 0.02, 'attempts': 1, 
+    'timeIncrement': 0.01, 'increment': 2, 'stepTime': 0.02, 'step': 1, 
+    'jobName': 'Job-ddm-exe-1', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 3, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STATUS, {'totalTime': 0.03, 'attempts': 1, 
+    'timeIncrement': 0.01, 'increment': 3, 'stepTime': 0.03, 'step': 1, 
+    'jobName': 'Job-ddm-exe-1', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 4, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STATUS, {'totalTime': 0.04, 'attempts': 1, 
+    'timeIncrement': 0.01, 'increment': 4, 'stepTime': 0.04, 'step': 1, 
+    'jobName': 'Job-ddm-exe-1', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 5, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STATUS, {'totalTime': 0.05, 'attempts': 1, 
+    'timeIncrement': 0.01, 'increment': 5, 'stepTime': 0.05, 'step': 1, 
+    'jobName': 'Job-ddm-exe-1', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 6, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STATUS, {'totalTime': 0.06, 'attempts': 1, 
+    'timeIncrement': 0.01, 'increment': 6, 'stepTime': 0.06, 'step': 1, 
+    'jobName': 'Job-ddm-exe-1', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 7, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STATUS, {'totalTime': 0.07, 'attempts': 1, 
+    'timeIncrement': 0.01, 'increment': 7, 'stepTime': 0.07, 'step': 1, 
+    'jobName': 'Job-ddm-exe-1', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 8, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STATUS, {'totalTime': 0.08, 'attempts': 1, 
+    'timeIncrement': 0.01, 'increment': 8, 'stepTime': 0.08, 'step': 1, 
+    'jobName': 'Job-ddm-exe-1', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 9, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STATUS, {'totalTime': 0.09, 'attempts': 1, 
+    'timeIncrement': 0.01, 'increment': 9, 'stepTime': 0.09, 'step': 1, 
+    'jobName': 'Job-ddm-exe-1', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 10, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STATUS, {'totalTime': 0.1, 'attempts': 1, 
+    'timeIncrement': 0.01, 'increment': 10, 'stepTime': 0.1, 'step': 1, 
+    'jobName': 'Job-ddm-exe-1', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 11, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STATUS, {'totalTime': 0.11, 'attempts': 1, 
+    'timeIncrement': 0.01, 'increment': 11, 'stepTime': 0.11, 'step': 1, 
+    'jobName': 'Job-ddm-exe-1', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 12, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STATUS, {'totalTime': 0.12, 'attempts': 1, 
+    'timeIncrement': 0.01, 'increment': 12, 'stepTime': 0.12, 'step': 1, 
+    'jobName': 'Job-ddm-exe-1', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 13, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STATUS, {'totalTime': 0.13, 'attempts': 1, 
+    'timeIncrement': 0.01, 'increment': 13, 'stepTime': 0.13, 'step': 1, 
+    'jobName': 'Job-ddm-exe-1', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 14, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STATUS, {'totalTime': 0.14, 'attempts': 1, 
+    'timeIncrement': 0.01, 'increment': 14, 'stepTime': 0.14, 'step': 1, 
+    'jobName': 'Job-ddm-exe-1', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 15, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STATUS, {'totalTime': 0.15, 'attempts': 1, 
+    'timeIncrement': 0.01, 'increment': 15, 'stepTime': 0.15, 'step': 1, 
+    'jobName': 'Job-ddm-exe-1', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 16, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STATUS, {'totalTime': 0.16, 'attempts': 1, 
+    'timeIncrement': 0.01, 'increment': 16, 'stepTime': 0.16, 'step': 1, 
+    'jobName': 'Job-ddm-exe-1', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 17, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STATUS, {'totalTime': 0.17, 'attempts': 1, 
+    'timeIncrement': 0.01, 'increment': 17, 'stepTime': 0.17, 'step': 1, 
+    'jobName': 'Job-ddm-exe-1', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 18, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STATUS, {'totalTime': 0.18, 'attempts': 1, 
+    'timeIncrement': 0.01, 'increment': 18, 'stepTime': 0.18, 'step': 1, 
+    'jobName': 'Job-ddm-exe-1', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 19, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STATUS, {'totalTime': 0.19, 'attempts': 1, 
+    'timeIncrement': 0.01, 'increment': 19, 'stepTime': 0.19, 'step': 1, 
+    'jobName': 'Job-ddm-exe-1', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 20, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STATUS, {'totalTime': 0.2, 'attempts': 1, 
+    'timeIncrement': 0.01, 'increment': 20, 'stepTime': 0.2, 'step': 1, 
+    'jobName': 'Job-ddm-exe-1', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 21, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STATUS, {'totalTime': 0.21, 'attempts': 1, 
+    'timeIncrement': 0.01, 'increment': 21, 'stepTime': 0.21, 'step': 1, 
+    'jobName': 'Job-ddm-exe-1', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 22, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STATUS, {'totalTime': 0.22, 'attempts': 1, 
+    'timeIncrement': 0.01, 'increment': 22, 'stepTime': 0.22, 'step': 1, 
+    'jobName': 'Job-ddm-exe-1', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 23, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STATUS, {'totalTime': 0.23, 'attempts': 1, 
+    'timeIncrement': 0.01, 'increment': 23, 'stepTime': 0.23, 'step': 1, 
+    'jobName': 'Job-ddm-exe-1', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 24, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STATUS, {'totalTime': 0.24, 'attempts': 1, 
+    'timeIncrement': 0.01, 'increment': 24, 'stepTime': 0.24, 'step': 1, 
+    'jobName': 'Job-ddm-exe-1', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 25, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STATUS, {'totalTime': 0.25, 'attempts': 1, 
+    'timeIncrement': 0.01, 'increment': 25, 'stepTime': 0.25, 'step': 1, 
+    'jobName': 'Job-ddm-exe-1', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 26, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STATUS, {'totalTime': 0.26, 'attempts': 1, 
+    'timeIncrement': 0.01, 'increment': 26, 'stepTime': 0.26, 'step': 1, 
+    'jobName': 'Job-ddm-exe-1', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 27, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STATUS, {'totalTime': 0.27, 'attempts': 1, 
+    'timeIncrement': 0.01, 'increment': 27, 'stepTime': 0.27, 'step': 1, 
+    'jobName': 'Job-ddm-exe-1', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 28, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STATUS, {'totalTime': 0.28, 'attempts': 1, 
+    'timeIncrement': 0.01, 'increment': 28, 'stepTime': 0.28, 'step': 1, 
+    'jobName': 'Job-ddm-exe-1', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 29, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STATUS, {'totalTime': 0.29, 'attempts': 1, 
+    'timeIncrement': 0.01, 'increment': 29, 'stepTime': 0.29, 'step': 1, 
+    'jobName': 'Job-ddm-exe-1', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 30, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STATUS, {'totalTime': 0.3, 'attempts': 1, 
+    'timeIncrement': 0.01, 'increment': 30, 'stepTime': 0.3, 'step': 1, 
+    'jobName': 'Job-ddm-exe-1', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 31, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STATUS, {'totalTime': 0.31, 'attempts': 1, 
+    'timeIncrement': 0.01, 'increment': 31, 'stepTime': 0.31, 'step': 1, 
+    'jobName': 'Job-ddm-exe-1', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 32, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STATUS, {'totalTime': 0.32, 'attempts': 1, 
+    'timeIncrement': 0.01, 'increment': 32, 'stepTime': 0.32, 'step': 1, 
+    'jobName': 'Job-ddm-exe-1', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 33, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STATUS, {'totalTime': 0.33, 'attempts': 1, 
+    'timeIncrement': 0.01, 'increment': 33, 'stepTime': 0.33, 'step': 1, 
+    'jobName': 'Job-ddm-exe-1', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 34, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STATUS, {'totalTime': 0.34, 'attempts': 1, 
+    'timeIncrement': 0.01, 'increment': 34, 'stepTime': 0.34, 'step': 1, 
+    'jobName': 'Job-ddm-exe-1', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 35, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STATUS, {'totalTime': 0.35, 'attempts': 1, 
+    'timeIncrement': 0.01, 'increment': 35, 'stepTime': 0.35, 'step': 1, 
+    'jobName': 'Job-ddm-exe-1', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 36, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STATUS, {'totalTime': 0.36, 'attempts': 1, 
+    'timeIncrement': 0.01, 'increment': 36, 'stepTime': 0.36, 'step': 1, 
+    'jobName': 'Job-ddm-exe-1', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 37, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STATUS, {'totalTime': 0.37, 'attempts': 1, 
+    'timeIncrement': 0.01, 'increment': 37, 'stepTime': 0.37, 'step': 1, 
+    'jobName': 'Job-ddm-exe-1', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 38, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STATUS, {'totalTime': 0.38, 'attempts': 1, 
+    'timeIncrement': 0.01, 'increment': 38, 'stepTime': 0.38, 'step': 1, 
+    'jobName': 'Job-ddm-exe-1', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 39, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STATUS, {'totalTime': 0.39, 'attempts': 1, 
+    'timeIncrement': 0.01, 'increment': 39, 'stepTime': 0.39, 'step': 1, 
+    'jobName': 'Job-ddm-exe-1', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 40, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STATUS, {'totalTime': 0.4, 'attempts': 1, 
+    'timeIncrement': 0.01, 'increment': 40, 'stepTime': 0.4, 'step': 1, 
+    'jobName': 'Job-ddm-exe-1', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 41, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STATUS, {'totalTime': 0.41, 'attempts': 1, 
+    'timeIncrement': 0.01, 'increment': 41, 'stepTime': 0.41, 'step': 1, 
+    'jobName': 'Job-ddm-exe-1', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 42, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STATUS, {'totalTime': 0.42, 'attempts': 1, 
+    'timeIncrement': 0.01, 'increment': 42, 'stepTime': 0.42, 'step': 1, 
+    'jobName': 'Job-ddm-exe-1', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 43, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STATUS, {'totalTime': 0.43, 'attempts': 1, 
+    'timeIncrement': 0.01, 'increment': 43, 'stepTime': 0.43, 'step': 1, 
+    'jobName': 'Job-ddm-exe-1', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 44, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STATUS, {'totalTime': 0.44, 'attempts': 1, 
+    'timeIncrement': 0.01, 'increment': 44, 'stepTime': 0.44, 'step': 1, 
+    'jobName': 'Job-ddm-exe-1', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 45, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STATUS, {'totalTime': 0.45, 'attempts': 1, 
+    'timeIncrement': 0.01, 'increment': 45, 'stepTime': 0.45, 'step': 1, 
+    'jobName': 'Job-ddm-exe-1', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 46, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STATUS, {'totalTime': 0.46, 'attempts': 1, 
+    'timeIncrement': 0.01, 'increment': 46, 'stepTime': 0.46, 'step': 1, 
+    'jobName': 'Job-ddm-exe-1', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 47, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STATUS, {'totalTime': 0.47, 'attempts': 1, 
+    'timeIncrement': 0.01, 'increment': 47, 'stepTime': 0.47, 'step': 1, 
+    'jobName': 'Job-ddm-exe-1', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 48, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STATUS, {'totalTime': 0.48, 'attempts': 1, 
+    'timeIncrement': 0.01, 'increment': 48, 'stepTime': 0.48, 'step': 1, 
+    'jobName': 'Job-ddm-exe-1', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 49, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STATUS, {'totalTime': 0.49, 'attempts': 1, 
+    'timeIncrement': 0.01, 'increment': 49, 'stepTime': 0.49, 'step': 1, 
+    'jobName': 'Job-ddm-exe-1', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 50, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STATUS, {'totalTime': 0.5, 'attempts': 1, 
+    'timeIncrement': 0.01, 'increment': 50, 'stepTime': 0.5, 'step': 1, 
+    'jobName': 'Job-ddm-exe-1', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 51, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STATUS, {'totalTime': 0.51, 'attempts': 1, 
+    'timeIncrement': 0.01, 'increment': 51, 'stepTime': 0.51, 'step': 1, 
+    'jobName': 'Job-ddm-exe-1', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 52, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STATUS, {'totalTime': 0.52, 'attempts': 1, 
+    'timeIncrement': 0.01, 'increment': 52, 'stepTime': 0.52, 'step': 1, 
+    'jobName': 'Job-ddm-exe-1', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 53, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STATUS, {'totalTime': 0.53, 'attempts': 1, 
+    'timeIncrement': 0.01, 'increment': 53, 'stepTime': 0.53, 'step': 1, 
+    'jobName': 'Job-ddm-exe-1', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 54, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STATUS, {'totalTime': 0.54, 'attempts': 1, 
+    'timeIncrement': 0.01, 'increment': 54, 'stepTime': 0.54, 'step': 1, 
+    'jobName': 'Job-ddm-exe-1', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 55, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STATUS, {'totalTime': 0.55, 'attempts': 1, 
+    'timeIncrement': 0.01, 'increment': 55, 'stepTime': 0.55, 'step': 1, 
+    'jobName': 'Job-ddm-exe-1', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 56, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STATUS, {'totalTime': 0.56, 'attempts': 1, 
+    'timeIncrement': 0.01, 'increment': 56, 'stepTime': 0.56, 'step': 1, 
+    'jobName': 'Job-ddm-exe-1', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 57, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STATUS, {'totalTime': 0.57, 'attempts': 1, 
+    'timeIncrement': 0.01, 'increment': 57, 'stepTime': 0.57, 'step': 1, 
+    'jobName': 'Job-ddm-exe-1', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 58, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STATUS, {'totalTime': 0.58, 'attempts': 1, 
+    'timeIncrement': 0.01, 'increment': 58, 'stepTime': 0.58, 'step': 1, 
+    'jobName': 'Job-ddm-exe-1', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 59, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STATUS, {'totalTime': 0.59, 'attempts': 1, 
+    'timeIncrement': 0.01, 'increment': 59, 'stepTime': 0.59, 'step': 1, 
+    'jobName': 'Job-ddm-exe-1', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 60, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STATUS, {'totalTime': 0.6, 'attempts': 1, 
+    'timeIncrement': 0.01, 'increment': 60, 'stepTime': 0.6, 'step': 1, 
+    'jobName': 'Job-ddm-exe-1', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 61, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STATUS, {'totalTime': 0.61, 'attempts': 1, 
+    'timeIncrement': 0.01, 'increment': 61, 'stepTime': 0.61, 'step': 1, 
+    'jobName': 'Job-ddm-exe-1', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 62, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STATUS, {'totalTime': 0.62, 'attempts': 1, 
+    'timeIncrement': 0.01, 'increment': 62, 'stepTime': 0.62, 'step': 1, 
+    'jobName': 'Job-ddm-exe-1', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 63, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STATUS, {'totalTime': 0.63, 'attempts': 1, 
+    'timeIncrement': 0.01, 'increment': 63, 'stepTime': 0.63, 'step': 1, 
+    'jobName': 'Job-ddm-exe-1', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 64, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STATUS, {'totalTime': 0.64, 'attempts': 1, 
+    'timeIncrement': 0.01, 'increment': 64, 'stepTime': 0.64, 'step': 1, 
+    'jobName': 'Job-ddm-exe-1', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 65, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STATUS, {'totalTime': 0.65, 'attempts': 1, 
+    'timeIncrement': 0.01, 'increment': 65, 'stepTime': 0.65, 'step': 1, 
+    'jobName': 'Job-ddm-exe-1', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 66, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STATUS, {'totalTime': 0.66, 'attempts': 1, 
+    'timeIncrement': 0.01, 'increment': 66, 'stepTime': 0.66, 'step': 1, 
+    'jobName': 'Job-ddm-exe-1', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 67, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STATUS, {'totalTime': 0.67, 'attempts': 1, 
+    'timeIncrement': 0.01, 'increment': 67, 'stepTime': 0.67, 'step': 1, 
+    'jobName': 'Job-ddm-exe-1', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 68, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STATUS, {'totalTime': 0.68, 'attempts': 1, 
+    'timeIncrement': 0.01, 'increment': 68, 'stepTime': 0.68, 'step': 1, 
+    'jobName': 'Job-ddm-exe-1', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 69, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STATUS, {'totalTime': 0.69, 'attempts': 1, 
+    'timeIncrement': 0.01, 'increment': 69, 'stepTime': 0.69, 'step': 1, 
+    'jobName': 'Job-ddm-exe-1', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 70, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STATUS, {'totalTime': 0.7, 'attempts': 1, 
+    'timeIncrement': 0.01, 'increment': 70, 'stepTime': 0.7, 'step': 1, 
+    'jobName': 'Job-ddm-exe-1', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 71, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STATUS, {'totalTime': 0.71, 'attempts': 1, 
+    'timeIncrement': 0.01, 'increment': 71, 'stepTime': 0.71, 'step': 1, 
+    'jobName': 'Job-ddm-exe-1', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 72, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STATUS, {'totalTime': 0.72, 'attempts': 1, 
+    'timeIncrement': 0.01, 'increment': 72, 'stepTime': 0.72, 'step': 1, 
+    'jobName': 'Job-ddm-exe-1', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 73, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STATUS, {'totalTime': 0.73, 'attempts': 1, 
+    'timeIncrement': 0.01, 'increment': 73, 'stepTime': 0.73, 'step': 1, 
+    'jobName': 'Job-ddm-exe-1', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 74, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STATUS, {'totalTime': 0.74, 'attempts': 1, 
+    'timeIncrement': 0.01, 'increment': 74, 'stepTime': 0.74, 'step': 1, 
+    'jobName': 'Job-ddm-exe-1', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 75, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STATUS, {'totalTime': 0.75, 'attempts': 1, 
+    'timeIncrement': 0.01, 'increment': 75, 'stepTime': 0.75, 'step': 1, 
+    'jobName': 'Job-ddm-exe-1', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 76, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STATUS, {'totalTime': 0.76, 'attempts': 1, 
+    'timeIncrement': 0.01, 'increment': 76, 'stepTime': 0.76, 'step': 1, 
+    'jobName': 'Job-ddm-exe-1', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 77, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STATUS, {'totalTime': 0.77, 'attempts': 1, 
+    'timeIncrement': 0.01, 'increment': 77, 'stepTime': 0.77, 'step': 1, 
+    'jobName': 'Job-ddm-exe-1', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 78, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STATUS, {'totalTime': 0.78, 'attempts': 1, 
+    'timeIncrement': 0.01, 'increment': 78, 'stepTime': 0.78, 'step': 1, 
+    'jobName': 'Job-ddm-exe-1', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 79, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STATUS, {'totalTime': 0.79, 'attempts': 1, 
+    'timeIncrement': 0.01, 'increment': 79, 'stepTime': 0.79, 'step': 1, 
+    'jobName': 'Job-ddm-exe-1', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 80, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STATUS, {'totalTime': 0.8, 'attempts': 1, 
+    'timeIncrement': 0.01, 'increment': 80, 'stepTime': 0.8, 'step': 1, 
+    'jobName': 'Job-ddm-exe-1', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 81, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STATUS, {'totalTime': 0.81, 'attempts': 1, 
+    'timeIncrement': 0.01, 'increment': 81, 'stepTime': 0.81, 'step': 1, 
+    'jobName': 'Job-ddm-exe-1', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 82, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STATUS, {'totalTime': 0.820000000000001, 
+    'attempts': 1, 'timeIncrement': 0.01, 'increment': 82, 
+    'stepTime': 0.820000000000001, 'step': 1, 'jobName': 'Job-ddm-exe-1', 
+    'severe': 0, 'iterations': 1, 'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 83, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STATUS, {'totalTime': 0.830000000000001, 
+    'attempts': 1, 'timeIncrement': 0.01, 'increment': 83, 
+    'stepTime': 0.830000000000001, 'step': 1, 'jobName': 'Job-ddm-exe-1', 
+    'severe': 0, 'iterations': 1, 'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 84, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STATUS, {'totalTime': 0.840000000000001, 
+    'attempts': 1, 'timeIncrement': 0.01, 'increment': 84, 
+    'stepTime': 0.840000000000001, 'step': 1, 'jobName': 'Job-ddm-exe-1', 
+    'severe': 0, 'iterations': 1, 'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 85, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STATUS, {'totalTime': 0.850000000000001, 
+    'attempts': 1, 'timeIncrement': 0.01, 'increment': 85, 
+    'stepTime': 0.850000000000001, 'step': 1, 'jobName': 'Job-ddm-exe-1', 
+    'severe': 0, 'iterations': 1, 'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 86, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STATUS, {'totalTime': 0.860000000000001, 
+    'attempts': 1, 'timeIncrement': 0.01, 'increment': 86, 
+    'stepTime': 0.860000000000001, 'step': 1, 'jobName': 'Job-ddm-exe-1', 
+    'severe': 0, 'iterations': 1, 'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 87, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STATUS, {'totalTime': 0.870000000000001, 
+    'attempts': 1, 'timeIncrement': 0.01, 'increment': 87, 
+    'stepTime': 0.870000000000001, 'step': 1, 'jobName': 'Job-ddm-exe-1', 
+    'severe': 0, 'iterations': 1, 'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 88, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STATUS, {'totalTime': 0.880000000000001, 
+    'attempts': 1, 'timeIncrement': 0.01, 'increment': 88, 
+    'stepTime': 0.880000000000001, 'step': 1, 'jobName': 'Job-ddm-exe-1', 
+    'severe': 0, 'iterations': 1, 'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 89, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STATUS, {'totalTime': 0.890000000000001, 
+    'attempts': 1, 'timeIncrement': 0.01, 'increment': 89, 
+    'stepTime': 0.890000000000001, 'step': 1, 'jobName': 'Job-ddm-exe-1', 
+    'severe': 0, 'iterations': 1, 'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 90, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STATUS, {'totalTime': 0.900000000000001, 
+    'attempts': 1, 'timeIncrement': 0.01, 'increment': 90, 
+    'stepTime': 0.900000000000001, 'step': 1, 'jobName': 'Job-ddm-exe-1', 
+    'severe': 0, 'iterations': 1, 'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 91, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STATUS, {'totalTime': 0.910000000000001, 
+    'attempts': 1, 'timeIncrement': 0.01, 'increment': 91, 
+    'stepTime': 0.910000000000001, 'step': 1, 'jobName': 'Job-ddm-exe-1', 
+    'severe': 0, 'iterations': 1, 'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 92, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STATUS, {'totalTime': 0.920000000000001, 
+    'attempts': 1, 'timeIncrement': 0.01, 'increment': 92, 
+    'stepTime': 0.920000000000001, 'step': 1, 'jobName': 'Job-ddm-exe-1', 
+    'severe': 0, 'iterations': 1, 'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 93, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STATUS, {'totalTime': 0.930000000000001, 
+    'attempts': 1, 'timeIncrement': 0.01, 'increment': 93, 
+    'stepTime': 0.930000000000001, 'step': 1, 'jobName': 'Job-ddm-exe-1', 
+    'severe': 0, 'iterations': 1, 'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 94, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STATUS, {'totalTime': 0.940000000000001, 
+    'attempts': 1, 'timeIncrement': 0.01, 'increment': 94, 
+    'stepTime': 0.940000000000001, 'step': 1, 'jobName': 'Job-ddm-exe-1', 
+    'severe': 0, 'iterations': 1, 'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 95, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STATUS, {'totalTime': 0.950000000000001, 
+    'attempts': 1, 'timeIncrement': 0.01, 'increment': 95, 
+    'stepTime': 0.950000000000001, 'step': 1, 'jobName': 'Job-ddm-exe-1', 
+    'severe': 0, 'iterations': 1, 'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 96, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STATUS, {'totalTime': 0.960000000000001, 
+    'attempts': 1, 'timeIncrement': 0.01, 'increment': 96, 
+    'stepTime': 0.960000000000001, 'step': 1, 'jobName': 'Job-ddm-exe-1', 
+    'severe': 0, 'iterations': 1, 'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 97, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STATUS, {'totalTime': 0.970000000000001, 
+    'attempts': 1, 'timeIncrement': 0.01, 'increment': 97, 
+    'stepTime': 0.970000000000001, 'step': 1, 'jobName': 'Job-ddm-exe-1', 
+    'severe': 0, 'iterations': 1, 'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 98, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STATUS, {'totalTime': 0.980000000000001, 
+    'attempts': 1, 'timeIncrement': 0.01, 'increment': 98, 
+    'stepTime': 0.980000000000001, 'step': 1, 'jobName': 'Job-ddm-exe-1', 
+    'severe': 0, 'iterations': 1, 'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 99, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STATUS, {'totalTime': 0.990000000000001, 
+    'attempts': 1, 'timeIncrement': 0.01, 'increment': 99, 
+    'stepTime': 0.990000000000001, 'step': 1, 'jobName': 'Job-ddm-exe-1', 
+    'severe': 0, 'iterations': 1, 'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 100, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STATUS, {'totalTime': 1.0, 'attempts': 1, 
+    'timeIncrement': 0.01, 'increment': 100, 'stepTime': 1.0, 'step': 1, 
+    'jobName': 'Job-ddm-exe-1', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 101, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STATUS, {'totalTime': 1.01, 'attempts': 1, 
+    'timeIncrement': 0.01, 'increment': 101, 'stepTime': 1.01, 'step': 1, 
+    'jobName': 'Job-ddm-exe-1', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 102, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STATUS, {'totalTime': 1.02, 'attempts': 1, 
+    'timeIncrement': 0.01, 'increment': 102, 'stepTime': 1.02, 'step': 1, 
+    'jobName': 'Job-ddm-exe-1', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 103, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STATUS, {'totalTime': 1.03, 'attempts': 1, 
+    'timeIncrement': 0.01, 'increment': 103, 'stepTime': 1.03, 'step': 1, 
+    'jobName': 'Job-ddm-exe-1', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 104, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STATUS, {'totalTime': 1.04, 'attempts': 1, 
+    'timeIncrement': 0.01, 'increment': 104, 'stepTime': 1.04, 'step': 1, 
+    'jobName': 'Job-ddm-exe-1', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 105, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STATUS, {'totalTime': 1.05, 'attempts': 1, 
+    'timeIncrement': 0.01, 'increment': 105, 'stepTime': 1.05, 'step': 1, 
+    'jobName': 'Job-ddm-exe-1', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 106, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STATUS, {'totalTime': 1.06, 'attempts': 1, 
+    'timeIncrement': 0.01, 'increment': 106, 'stepTime': 1.06, 'step': 1, 
+    'jobName': 'Job-ddm-exe-1', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 107, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STATUS, {'totalTime': 1.07, 'attempts': 1, 
+    'timeIncrement': 0.01, 'increment': 107, 'stepTime': 1.07, 'step': 1, 
+    'jobName': 'Job-ddm-exe-1', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 108, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STATUS, {'totalTime': 1.08, 'attempts': 1, 
+    'timeIncrement': 0.01, 'increment': 108, 'stepTime': 1.08, 'step': 1, 
+    'jobName': 'Job-ddm-exe-1', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 109, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STATUS, {'totalTime': 1.09, 'attempts': 1, 
+    'timeIncrement': 0.01, 'increment': 109, 'stepTime': 1.09, 'step': 1, 
+    'jobName': 'Job-ddm-exe-1', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 110, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STATUS, {'totalTime': 1.1, 'attempts': 1, 
+    'timeIncrement': 0.01, 'increment': 110, 'stepTime': 1.1, 'step': 1, 
+    'jobName': 'Job-ddm-exe-1', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 111, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STATUS, {'totalTime': 1.11, 'attempts': 1, 
+    'timeIncrement': 0.01, 'increment': 111, 'stepTime': 1.11, 'step': 1, 
+    'jobName': 'Job-ddm-exe-1', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 112, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STATUS, {'totalTime': 1.12, 'attempts': 1, 
+    'timeIncrement': 0.01, 'increment': 112, 'stepTime': 1.12, 'step': 1, 
+    'jobName': 'Job-ddm-exe-1', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 113, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STATUS, {'totalTime': 1.13, 'attempts': 1, 
+    'timeIncrement': 0.01, 'increment': 113, 'stepTime': 1.13, 'step': 1, 
+    'jobName': 'Job-ddm-exe-1', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 114, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STATUS, {'totalTime': 1.14, 'attempts': 1, 
+    'timeIncrement': 0.01, 'increment': 114, 'stepTime': 1.14, 'step': 1, 
+    'jobName': 'Job-ddm-exe-1', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 115, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STATUS, {'totalTime': 1.15, 'attempts': 1, 
+    'timeIncrement': 0.01, 'increment': 115, 'stepTime': 1.15, 'step': 1, 
+    'jobName': 'Job-ddm-exe-1', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 116, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STATUS, {'totalTime': 1.16, 'attempts': 1, 
+    'timeIncrement': 0.01, 'increment': 116, 'stepTime': 1.16, 'step': 1, 
+    'jobName': 'Job-ddm-exe-1', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 117, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STATUS, {'totalTime': 1.17, 'attempts': 1, 
+    'timeIncrement': 0.01, 'increment': 117, 'stepTime': 1.17, 'step': 1, 
+    'jobName': 'Job-ddm-exe-1', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 118, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STATUS, {'totalTime': 1.18, 'attempts': 1, 
+    'timeIncrement': 0.01, 'increment': 118, 'stepTime': 1.18, 'step': 1, 
+    'jobName': 'Job-ddm-exe-1', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 119, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STATUS, {'totalTime': 1.19, 'attempts': 1, 
+    'timeIncrement': 0.01, 'increment': 119, 'stepTime': 1.19, 'step': 1, 
+    'jobName': 'Job-ddm-exe-1', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 120, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STATUS, {'totalTime': 1.2, 'attempts': 1, 
+    'timeIncrement': 0.01, 'increment': 120, 'stepTime': 1.2, 'step': 1, 
+    'jobName': 'Job-ddm-exe-1', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 121, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STATUS, {'totalTime': 1.21, 'attempts': 1, 
+    'timeIncrement': 0.01, 'increment': 121, 'stepTime': 1.21, 'step': 1, 
+    'jobName': 'Job-ddm-exe-1', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 122, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STATUS, {'totalTime': 1.22, 'attempts': 1, 
+    'timeIncrement': 0.01, 'increment': 122, 'stepTime': 1.22, 'step': 1, 
+    'jobName': 'Job-ddm-exe-1', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 123, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STATUS, {'totalTime': 1.23, 'attempts': 1, 
+    'timeIncrement': 0.01, 'increment': 123, 'stepTime': 1.23, 'step': 1, 
+    'jobName': 'Job-ddm-exe-1', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 124, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STATUS, {'totalTime': 1.24, 'attempts': 1, 
+    'timeIncrement': 0.01, 'increment': 124, 'stepTime': 1.24, 'step': 1, 
+    'jobName': 'Job-ddm-exe-1', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 125, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STATUS, {'totalTime': 1.25, 'attempts': 1, 
+    'timeIncrement': 0.01, 'increment': 125, 'stepTime': 1.25, 'step': 1, 
+    'jobName': 'Job-ddm-exe-1', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 126, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STATUS, {'totalTime': 1.26, 'attempts': 1, 
+    'timeIncrement': 0.01, 'increment': 126, 'stepTime': 1.26, 'step': 1, 
+    'jobName': 'Job-ddm-exe-1', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 127, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STATUS, {'totalTime': 1.27, 'attempts': 1, 
+    'timeIncrement': 0.01, 'increment': 127, 'stepTime': 1.27, 'step': 1, 
+    'jobName': 'Job-ddm-exe-1', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 128, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STATUS, {'totalTime': 1.28, 'attempts': 1, 
+    'timeIncrement': 0.01, 'increment': 128, 'stepTime': 1.28, 'step': 1, 
+    'jobName': 'Job-ddm-exe-1', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 129, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STATUS, {'totalTime': 1.29, 'attempts': 1, 
+    'timeIncrement': 0.01, 'increment': 129, 'stepTime': 1.29, 'step': 1, 
+    'jobName': 'Job-ddm-exe-1', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 130, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STATUS, {'totalTime': 1.3, 'attempts': 1, 
+    'timeIncrement': 0.01, 'increment': 130, 'stepTime': 1.3, 'step': 1, 
+    'jobName': 'Job-ddm-exe-1', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 131, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STATUS, {'totalTime': 1.31, 'attempts': 1, 
+    'timeIncrement': 0.01, 'increment': 131, 'stepTime': 1.31, 'step': 1, 
+    'jobName': 'Job-ddm-exe-1', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 132, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STATUS, {'totalTime': 1.32, 'attempts': 1, 
+    'timeIncrement': 0.01, 'increment': 132, 'stepTime': 1.32, 'step': 1, 
+    'jobName': 'Job-ddm-exe-1', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 133, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STATUS, {'totalTime': 1.33, 'attempts': 1, 
+    'timeIncrement': 0.01, 'increment': 133, 'stepTime': 1.33, 'step': 1, 
+    'jobName': 'Job-ddm-exe-1', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 134, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STATUS, {'totalTime': 1.34, 'attempts': 1, 
+    'timeIncrement': 0.01, 'increment': 134, 'stepTime': 1.34, 'step': 1, 
+    'jobName': 'Job-ddm-exe-1', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 135, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STATUS, {'totalTime': 1.35, 'attempts': 1, 
+    'timeIncrement': 0.01, 'increment': 135, 'stepTime': 1.35, 'step': 1, 
+    'jobName': 'Job-ddm-exe-1', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 136, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STATUS, {'totalTime': 1.36, 'attempts': 1, 
+    'timeIncrement': 0.01, 'increment': 136, 'stepTime': 1.36, 'step': 1, 
+    'jobName': 'Job-ddm-exe-1', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 137, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STATUS, {'totalTime': 1.37, 'attempts': 1, 
+    'timeIncrement': 0.01, 'increment': 137, 'stepTime': 1.37, 'step': 1, 
+    'jobName': 'Job-ddm-exe-1', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 138, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STATUS, {'totalTime': 1.38, 'attempts': 1, 
+    'timeIncrement': 0.01, 'increment': 138, 'stepTime': 1.38, 'step': 1, 
+    'jobName': 'Job-ddm-exe-1', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 139, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STATUS, {'totalTime': 1.39, 'attempts': 1, 
+    'timeIncrement': 0.01, 'increment': 139, 'stepTime': 1.39, 'step': 1, 
+    'jobName': 'Job-ddm-exe-1', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 140, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STATUS, {'totalTime': 1.4, 'attempts': 1, 
+    'timeIncrement': 0.01, 'increment': 140, 'stepTime': 1.4, 'step': 1, 
+    'jobName': 'Job-ddm-exe-1', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 141, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STATUS, {'totalTime': 1.41, 'attempts': 1, 
+    'timeIncrement': 0.01, 'increment': 141, 'stepTime': 1.41, 'step': 1, 
+    'jobName': 'Job-ddm-exe-1', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 142, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STATUS, {'totalTime': 1.42, 'attempts': 1, 
+    'timeIncrement': 0.01, 'increment': 142, 'stepTime': 1.42, 'step': 1, 
+    'jobName': 'Job-ddm-exe-1', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 143, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STATUS, {'totalTime': 1.43, 'attempts': 1, 
+    'timeIncrement': 0.01, 'increment': 143, 'stepTime': 1.43, 'step': 1, 
+    'jobName': 'Job-ddm-exe-1', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 144, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STATUS, {'totalTime': 1.44, 'attempts': 1, 
+    'timeIncrement': 0.01, 'increment': 144, 'stepTime': 1.44, 'step': 1, 
+    'jobName': 'Job-ddm-exe-1', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 145, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STATUS, {'totalTime': 1.45, 'attempts': 1, 
+    'timeIncrement': 0.01, 'increment': 145, 'stepTime': 1.45, 'step': 1, 
+    'jobName': 'Job-ddm-exe-1', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 146, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STATUS, {'totalTime': 1.46, 'attempts': 1, 
+    'timeIncrement': 0.01, 'increment': 146, 'stepTime': 1.46, 'step': 1, 
+    'jobName': 'Job-ddm-exe-1', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 147, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STATUS, {'totalTime': 1.47, 'attempts': 1, 
+    'timeIncrement': 0.01, 'increment': 147, 'stepTime': 1.47, 'step': 1, 
+    'jobName': 'Job-ddm-exe-1', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 148, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STATUS, {'totalTime': 1.48, 'attempts': 1, 
+    'timeIncrement': 0.01, 'increment': 148, 'stepTime': 1.48, 'step': 1, 
+    'jobName': 'Job-ddm-exe-1', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 149, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STATUS, {'totalTime': 1.49, 'attempts': 1, 
+    'timeIncrement': 0.01, 'increment': 149, 'stepTime': 1.49, 'step': 1, 
+    'jobName': 'Job-ddm-exe-1', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 150, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STATUS, {'totalTime': 1.5, 'attempts': 1, 
+    'timeIncrement': 0.01, 'increment': 150, 'stepTime': 1.5, 'step': 1, 
+    'jobName': 'Job-ddm-exe-1', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 151, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STATUS, {'totalTime': 1.51, 'attempts': 1, 
+    'timeIncrement': 0.01, 'increment': 151, 'stepTime': 1.51, 'step': 1, 
+    'jobName': 'Job-ddm-exe-1', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 152, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STATUS, {'totalTime': 1.52, 'attempts': 1, 
+    'timeIncrement': 0.01, 'increment': 152, 'stepTime': 1.52, 'step': 1, 
+    'jobName': 'Job-ddm-exe-1', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 153, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STATUS, {'totalTime': 1.53, 'attempts': 1, 
+    'timeIncrement': 0.01, 'increment': 153, 'stepTime': 1.53, 'step': 1, 
+    'jobName': 'Job-ddm-exe-1', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 154, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STATUS, {'totalTime': 1.54, 'attempts': 1, 
+    'timeIncrement': 0.01, 'increment': 154, 'stepTime': 1.54, 'step': 1, 
+    'jobName': 'Job-ddm-exe-1', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 155, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STATUS, {'totalTime': 1.55, 'attempts': 1, 
+    'timeIncrement': 0.01, 'increment': 155, 'stepTime': 1.55, 'step': 1, 
+    'jobName': 'Job-ddm-exe-1', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 156, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STATUS, {'totalTime': 1.56, 'attempts': 1, 
+    'timeIncrement': 0.01, 'increment': 156, 'stepTime': 1.56, 'step': 1, 
+    'jobName': 'Job-ddm-exe-1', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 157, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STATUS, {'totalTime': 1.57, 'attempts': 1, 
+    'timeIncrement': 0.01, 'increment': 157, 'stepTime': 1.57, 'step': 1, 
+    'jobName': 'Job-ddm-exe-1', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 158, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STATUS, {'totalTime': 1.58, 'attempts': 1, 
+    'timeIncrement': 0.01, 'increment': 158, 'stepTime': 1.58, 'step': 1, 
+    'jobName': 'Job-ddm-exe-1', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 159, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STATUS, {'totalTime': 1.59, 'attempts': 1, 
+    'timeIncrement': 0.01, 'increment': 159, 'stepTime': 1.59, 'step': 1, 
+    'jobName': 'Job-ddm-exe-1', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 160, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STATUS, {'totalTime': 1.6, 'attempts': 1, 
+    'timeIncrement': 0.01, 'increment': 160, 'stepTime': 1.6, 'step': 1, 
+    'jobName': 'Job-ddm-exe-1', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 161, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STATUS, {'totalTime': 1.61, 'attempts': 1, 
+    'timeIncrement': 0.01, 'increment': 161, 'stepTime': 1.61, 'step': 1, 
+    'jobName': 'Job-ddm-exe-1', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 162, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STATUS, {'totalTime': 1.62, 'attempts': 1, 
+    'timeIncrement': 0.01, 'increment': 162, 'stepTime': 1.62, 'step': 1, 
+    'jobName': 'Job-ddm-exe-1', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 163, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STATUS, {'totalTime': 1.63, 'attempts': 1, 
+    'timeIncrement': 0.01, 'increment': 163, 'stepTime': 1.63, 'step': 1, 
+    'jobName': 'Job-ddm-exe-1', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 164, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STATUS, {'totalTime': 1.64, 'attempts': 1, 
+    'timeIncrement': 0.01, 'increment': 164, 'stepTime': 1.64, 'step': 1, 
+    'jobName': 'Job-ddm-exe-1', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 165, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STATUS, {'totalTime': 1.65, 'attempts': 1, 
+    'timeIncrement': 0.01, 'increment': 165, 'stepTime': 1.65, 'step': 1, 
+    'jobName': 'Job-ddm-exe-1', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 166, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STATUS, {'totalTime': 1.66, 'attempts': 1, 
+    'timeIncrement': 0.01, 'increment': 166, 'stepTime': 1.66, 'step': 1, 
+    'jobName': 'Job-ddm-exe-1', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 167, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STATUS, {'totalTime': 1.67, 'attempts': 1, 
+    'timeIncrement': 0.01, 'increment': 167, 'stepTime': 1.67, 'step': 1, 
+    'jobName': 'Job-ddm-exe-1', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 168, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STATUS, {'totalTime': 1.68, 'attempts': 1, 
+    'timeIncrement': 0.01, 'increment': 168, 'stepTime': 1.68, 'step': 1, 
+    'jobName': 'Job-ddm-exe-1', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 169, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STATUS, {'totalTime': 1.69, 'attempts': 1, 
+    'timeIncrement': 0.01, 'increment': 169, 'stepTime': 1.69, 'step': 1, 
+    'jobName': 'Job-ddm-exe-1', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 170, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STATUS, {'totalTime': 1.7, 'attempts': 1, 
+    'timeIncrement': 0.01, 'increment': 170, 'stepTime': 1.7, 'step': 1, 
+    'jobName': 'Job-ddm-exe-1', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 171, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STATUS, {'totalTime': 1.71, 'attempts': 1, 
+    'timeIncrement': 0.01, 'increment': 171, 'stepTime': 1.71, 'step': 1, 
+    'jobName': 'Job-ddm-exe-1', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 172, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STATUS, {'totalTime': 1.72, 'attempts': 1, 
+    'timeIncrement': 0.01, 'increment': 172, 'stepTime': 1.72, 'step': 1, 
+    'jobName': 'Job-ddm-exe-1', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 173, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STATUS, {'totalTime': 1.73, 'attempts': 1, 
+    'timeIncrement': 0.01, 'increment': 173, 'stepTime': 1.73, 'step': 1, 
+    'jobName': 'Job-ddm-exe-1', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 174, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STATUS, {'totalTime': 1.74, 'attempts': 1, 
+    'timeIncrement': 0.01, 'increment': 174, 'stepTime': 1.74, 'step': 1, 
+    'jobName': 'Job-ddm-exe-1', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 175, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STATUS, {'totalTime': 1.75, 'attempts': 1, 
+    'timeIncrement': 0.01, 'increment': 175, 'stepTime': 1.75, 'step': 1, 
+    'jobName': 'Job-ddm-exe-1', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 176, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STATUS, {'totalTime': 1.76, 'attempts': 1, 
+    'timeIncrement': 0.01, 'increment': 176, 'stepTime': 1.76, 'step': 1, 
+    'jobName': 'Job-ddm-exe-1', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 177, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STATUS, {'totalTime': 1.77, 'attempts': 1, 
+    'timeIncrement': 0.01, 'increment': 177, 'stepTime': 1.77, 'step': 1, 
+    'jobName': 'Job-ddm-exe-1', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 178, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STATUS, {'totalTime': 1.78, 'attempts': 1, 
+    'timeIncrement': 0.01, 'increment': 178, 'stepTime': 1.78, 'step': 1, 
+    'jobName': 'Job-ddm-exe-1', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 179, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STATUS, {'totalTime': 1.79, 'attempts': 1, 
+    'timeIncrement': 0.01, 'increment': 179, 'stepTime': 1.79, 'step': 1, 
+    'jobName': 'Job-ddm-exe-1', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 180, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STATUS, {'totalTime': 1.8, 'attempts': 1, 
+    'timeIncrement': 0.01, 'increment': 180, 'stepTime': 1.8, 'step': 1, 
+    'jobName': 'Job-ddm-exe-1', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 181, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STATUS, {'totalTime': 1.81, 'attempts': 1, 
+    'timeIncrement': 0.01, 'increment': 181, 'stepTime': 1.81, 'step': 1, 
+    'jobName': 'Job-ddm-exe-1', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 182, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STATUS, {'totalTime': 1.82, 'attempts': 1, 
+    'timeIncrement': 0.01, 'increment': 182, 'stepTime': 1.82, 'step': 1, 
+    'jobName': 'Job-ddm-exe-1', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 183, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STATUS, {'totalTime': 1.83, 'attempts': 1, 
+    'timeIncrement': 0.01, 'increment': 183, 'stepTime': 1.83, 'step': 1, 
+    'jobName': 'Job-ddm-exe-1', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 184, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STATUS, {'totalTime': 1.84, 'attempts': 1, 
+    'timeIncrement': 0.01, 'increment': 184, 'stepTime': 1.84, 'step': 1, 
+    'jobName': 'Job-ddm-exe-1', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 185, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STATUS, {'totalTime': 1.85, 'attempts': 1, 
+    'timeIncrement': 0.01, 'increment': 185, 'stepTime': 1.85, 'step': 1, 
+    'jobName': 'Job-ddm-exe-1', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 186, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STATUS, {'totalTime': 1.86, 'attempts': 1, 
+    'timeIncrement': 0.01, 'increment': 186, 'stepTime': 1.86, 'step': 1, 
+    'jobName': 'Job-ddm-exe-1', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 187, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STATUS, {'totalTime': 1.87, 'attempts': 1, 
+    'timeIncrement': 0.01, 'increment': 187, 'stepTime': 1.87, 'step': 1, 
+    'jobName': 'Job-ddm-exe-1', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-ddm-exe-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 
+    'step': 0, 'frame': 188, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(STATUS, {'totalTime': 1.8735, 'attempts': 1, 
+    'timeIncrement': 0.0034999999999985, 'increment': 188, 'stepTime': 1.8735, 
+    'step': 1, 'jobName': 'Job-ddm-exe-1', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['Job-ddm-exe-1']._Message(END_STEP, {'phase': STANDARD_PHASE, 
+    'stepId': 1, 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(COMPLETED, {'phase': STANDARD_PHASE, 
+    'message': 'Analysis phase complete', 'jobName': 'Job-ddm-exe-1'})
+mdb.jobs['Job-ddm-exe-1']._Message(JOB_COMPLETED, {
+    'time': 'Tue Feb 23 12:39:20 2021', 'jobName': 'Job-ddm-exe-1'})
+# Save by ejbarbero on 2021_02_23-12.42.21; build 2020 2019_09_13-13.49.31 163176
