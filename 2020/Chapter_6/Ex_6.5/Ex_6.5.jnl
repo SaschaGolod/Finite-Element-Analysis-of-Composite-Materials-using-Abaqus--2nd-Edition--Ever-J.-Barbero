@@ -1,0 +1,8 @@
+# Save by ejbarbero on 2022_08_28-17.29.27; build 2020 2019_09_13-13.49.31 163176
+from abaqus import *
+upgradeMdb(
+    'C:/Users/ejbarbero/Google Drive/Web/cadec-online.com/barbero/feacm-abaqus/Examples/Chapter_6/Ex_6.5/2020/Ex_6.5-6.10-1.cae'
+    , 
+    'C:/Users/ejbarbero/Google Drive/Web/cadec-online.com/barbero/feacm-abaqus/Examples/Chapter_6/Ex_6.5/2020/Ex_6.5.cae')
+# Save by ejbarbero on 2022_08_28-17.29.27; build 2020 2019_09_13-13.49.31 163176
+# Save by ejbarbero on 2022_08_28-17.30.17; build 2020 2019_09_13-13.49.31 163176

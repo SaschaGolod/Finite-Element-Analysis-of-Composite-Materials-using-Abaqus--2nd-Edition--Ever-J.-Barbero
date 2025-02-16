@@ -1,0 +1,879 @@
+# -*- coding: mbcs -*-
+from part import *
+from material import *
+from section import *
+from assembly import *
+from step import *
+from interaction import *
+from load import *
+from mesh import *
+from optimization import *
+from job import *
+from sketch import *
+from visualization import *
+from connectorBehavior import *
+mdb.models['Model-1'].ConstrainedSketch(name='__profile__', sheetSize=20.0)
+mdb.models['Model-1'].sketches['__profile__'].rectangle(point1=(-5.27, -9.128), 
+    point2=(5.27, 9.128))
+mdb.models['Model-1'].Part(dimensionality=TWO_D_PLANAR, name='Part-1', type=
+    DEFORMABLE_BODY)
+mdb.models['Model-1'].parts['Part-1'].BaseShell(sketch=
+    mdb.models['Model-1'].sketches['__profile__'])
+del mdb.models['Model-1'].sketches['__profile__']
+mdb.models['Model-1'].ConstrainedSketch(gridSpacing=1.0, name='__profile__', 
+    sheetSize=40, transform=
+    mdb.models['Model-1'].parts['Part-1'].MakeSketchTransform(
+    sketchPlane=mdb.models['Model-1'].parts['Part-1'].faces.findAt((0.0, 0.0, 
+    0.0), (0.0, 0.0, 1.0)), sketchPlaneSide=SIDE1, sketchOrientation=RIGHT, 
+    origin=(0.0, 0.0, 0.0)))
+mdb.models['Model-1'].parts['Part-1'].projectReferencesOntoSketch(filter=
+    COPLANAR_EDGES, sketch=mdb.models['Model-1'].sketches['__profile__'])
+mdb.models['Model-1'].sketches['__profile__'].CircleByCenterPerimeter(center=(
+    0.0, 0.0), point1=(0.0, 3.5))
+mdb.models['Model-1'].sketches['__profile__'].ArcByCenterEnds(center=(-5.27, 
+    9.128), direction=CLOCKWISE, point1=(-1.77, 9.128), point2=(-5.27, 5.628))
+mdb.models['Model-1'].sketches['__profile__'].ArcByCenterEnds(center=(5.27, 
+    9.128), direction=COUNTERCLOCKWISE, point1=(1.77, 9.128), point2=(5.27, 
+    5.628))
+mdb.models['Model-1'].sketches['__profile__'].ArcByCenterEnds(center=(-5.27, 
+    -9.128), direction=COUNTERCLOCKWISE, point1=(-1.77, -9.128), point2=(-5.27, 
+    -5.628))
+mdb.models['Model-1'].sketches['__profile__'].ArcByCenterEnds(center=(5.27, 
+    -9.128), direction=CLOCKWISE, point1=(1.77, -9.128), point2=(5.27, -5.628))
+mdb.models['Model-1'].sketches['__profile__'].Line(point1=(0.0, 9.128), point2=
+    (0.0, -9.128))
+mdb.models['Model-1'].sketches['__profile__'].Line(point1=(-5.27, 0.0), point2=
+    (5.27, 0.0))
+mdb.models['Model-1'].sketches['__profile__'].Line(point1=(-5.27, 4.564), 
+    point2=(5.27, 4.564))
+mdb.models['Model-1'].sketches['__profile__'].Line(point1=(-5.27, -4.564), 
+    point2=(5.27, -4.564))
+mdb.models['Model-1'].parts['Part-1'].PartitionFaceBySketch(faces=
+    mdb.models['Model-1'].parts['Part-1'].faces.findAt(((0.0, 0.0, 0.0), (0.0, 
+    0.0, 1.0))), sketch=mdb.models['Model-1'].sketches['__profile__'])
+del mdb.models['Model-1'].sketches['__profile__']
+mdb.models['Model-1'].Material(name='fiber')
+mdb.models['Model-1'].materials['fiber'].Elastic(table=((0.241, 0.2), ))
+mdb.models['Model-1'].Material(name='matrix')
+mdb.models['Model-1'].materials['matrix'].Elastic(table=((0.00312, 0.38), ))
+mdb.models['Model-1'].HomogeneousSolidSection(material='fiber', name=
+    'fiber-sec', thickness=None)
+mdb.models['Model-1'].HomogeneousSolidSection(material='matrix', name=
+    'matrix-sec', thickness=None)
+mdb.models['Model-1'].parts['Part-1'].SectionAssignment(offset=0.0, 
+    offsetField='', offsetType=MIDDLE_SURFACE, region=Region(
+    faces=mdb.models['Model-1'].parts['Part-1'].faces.findAt(((2.29358, 
+    0.301956, 0.0), (0.0, 0.0, 1.0)), ((-0.301956, 2.29358, 0.0), (0.0, 0.0, 
+    1.0)), ((-2.29358, -0.301956, 0.0), (0.0, 0.0, 1.0)), ((0.301956, -2.29358, 
+    0.0), (0.0, 0.0, 1.0)), ((2.97642, 8.826045, 0.0), (0.0, 0.0, 1.0)), ((
+    -4.968044, 6.83442, 0.0), (0.0, 0.0, 1.0)), ((-2.97642, -8.826045, 0.0), (
+    0.0, 0.0, 1.0)), ((4.968044, -6.83442, 0.0), (0.0, 0.0, 1.0)), )), 
+    sectionName='fiber-sec', thicknessAssignment=FROM_SECTION)
+mdb.models['Model-1'].parts['Part-1'].SectionAssignment(offset=0.0, 
+    offsetField='', offsetType=MIDDLE_SURFACE, region=Region(
+    faces=mdb.models['Model-1'].parts['Part-1'].faces.findAt(((-1.219753, 
+    8.826045, 0.0), (0.0, 0.0, 1.0)), ((4.968044, 5.313087, 0.0), (0.0, 0.0, 
+    1.0)), ((-3.591988, 2.929625, 0.0), (0.0, 0.0, 1.0)), ((0.301956, 3.814914, 
+    0.0), (0.0, 0.0, 1.0)), ((-4.968044, -5.313087, 0.0), (0.0, 0.0, 1.0)), ((
+    1.678012, -6.198375, 0.0), (0.0, 0.0, 1.0)), ((-0.301956, -3.814914, 0.0), 
+    (0.0, 0.0, 1.0)), ((3.591988, -2.929625, 0.0), (0.0, 0.0, 1.0)), )), 
+    sectionName='matrix-sec', thicknessAssignment=FROM_SECTION)
+mdb.models['Model-1'].parts['Part-1'].Set(edges=
+    mdb.models['Model-1'].parts['Part-1'].edges.findAt(((5.27, 7.378, 0.0), ), 
+    ((5.27, 5.096, 0.0), ), ((5.27, 2.282, 0.0), ), ((5.27, -2.282, 0.0), ), ((
+    5.27, -5.096, 0.0), ), ((5.27, -7.378, 0.0), ), ), name='Face1')
+mdb.models['Model-1'].parts['Part-1'].Set(edges=
+    mdb.models['Model-1'].parts['Part-1'].edges.findAt(((3.52, 9.128, 0.0), ), 
+    ((-0.885, 9.128, 0.0), ), ((0.885, 9.128, 0.0), ), ((-3.52, 9.128, 0.0), ), 
+    ), name='Face2')
+mdb.models['Model-1'].parts['Part-1'].Set(edges=
+    mdb.models['Model-1'].parts['Part-1'].edges.findAt(((-5.27, 7.378, 0.0), ), 
+    ((-5.27, 5.096, 0.0), ), ((-5.27, 2.282, 0.0), ), ((-5.27, -2.282, 0.0), ), 
+    ((-5.27, -5.096, 0.0), ), ((-5.27, -7.378, 0.0), ), ), name='Face3')
+mdb.models['Model-1'].parts['Part-1'].Set(edges=
+    mdb.models['Model-1'].parts['Part-1'].edges.findAt(((3.52, -9.128, 0.0), ), 
+    ((-0.885, -9.128, 0.0), ), ((0.885, -9.128, 0.0), ), ((-3.52, -9.128, 0.0), 
+    ), ), name='Face4')
+mdb.models['Model-1'].parts['Part-1'].Set(name='Vertex1', vertices=
+    mdb.models['Model-1'].parts['Part-1'].vertices.findAt(((5.27, 9.128, 0.0), 
+    )))
+mdb.models['Model-1'].parts['Part-1'].Set(name='Vertex2', vertices=
+    mdb.models['Model-1'].parts['Part-1'].vertices.findAt(((-5.27, 9.128, 0.0), 
+    )))
+mdb.models['Model-1'].parts['Part-1'].Set(name='Vertex3', vertices=
+    mdb.models['Model-1'].parts['Part-1'].vertices.findAt(((-5.27, -9.128, 
+    0.0), )))
+mdb.models['Model-1'].parts['Part-1'].Set(name='Vertex4', vertices=
+    mdb.models['Model-1'].parts['Part-1'].vertices.findAt(((5.27, -9.128, 0.0), 
+    )))
+mdb.models['Model-1'].rootAssembly.DatumCsysByDefault(CARTESIAN)
+mdb.models['Model-1'].rootAssembly.Instance(dependent=ON, name='Part-1-1', 
+    part=mdb.models['Model-1'].parts['Part-1'])
+mdb.models['Model-1'].parts['Part-1'].seedPart(deviationFactor=0.1, size=0.4)
+mdb.models['Model-1'].parts['Part-1'].setElementType(elemTypes=(ElemType(
+    elemCode=CPE4, elemLibrary=STANDARD), ElemType(elemCode=CPE3, 
+    elemLibrary=STANDARD)), regions=(
+    mdb.models['Model-1'].parts['Part-1'].faces.findAt(((2.47487373415292, 
+    2.47487373415292, 0.0), (0.0, 0.0, 1.0)), ((-2.47487373415292, 
+    2.47487373415292, 0.0), (0.0, 0.0, 1.0)), ((-2.47487373415292, 
+    -2.47487373415292, 0.0), (0.0, 0.0, 1.0)), ((2.47487373415292, 
+    -2.47487373415292, 0.0), (0.0, 0.0, 1.0)), ((4.03256313292354, 
+    7.89056313292354, 0.0), (0.0, 0.0, 1.0)), ((-4.03256313292354, 
+    7.89056313292354, 0.0), (0.0, 0.0, 1.0)), ((-4.03256313292354, 
+    -7.89056313292354, 0.0), (0.0, 0.0, 1.0)), ((4.03256313292354, 
+    -7.89056313292354, 0.0), (0.0, 0.0, 1.0)), ((-0.885, 6.846, 0.0), (0.0, 
+    0.0, 1.0)), ((0.885, 6.846, 0.0), (0.0, 0.0, 1.0)), ((-4.385, 2.282, 0.0), 
+    (0.0, 0.0, 1.0)), ((4.385, 2.282, 0.0), (0.0, 0.0, 1.0)), ((-0.885, -6.846, 
+    0.0), (0.0, 0.0, 1.0)), ((0.885, -6.846, 0.0), (0.0, 0.0, 1.0)), ((-4.385, 
+    -2.282, 0.0), (0.0, 0.0, 1.0)), ((4.385, -2.282, 0.0), (0.0, 0.0, 1.0)), ), 
+    ))
+mdb.models['Model-1'].parts['Part-1'].generateMesh()
+mdb.models['Model-1'].StaticLinearPerturbationStep(name='Step-1', previous=
+    'Initial')
+mdb.models['Model-1'].parts['Part-1'].ReferencePoint(point=(0.0, 0.0, 0.0))
+mdb.models['Model-1'].parts['Part-1'].Set(name='MasterNode', referencePoints=(
+    mdb.models['Model-1'].parts['Part-1'].referencePoints[15], ))
+mdb.models['Model-1'].DisplacementBC(amplitude=UNSET, createStepName='Step-1', 
+    distributionType=UNIFORM, fieldName='', fixed=OFF, localCsys=None, name=
+    'BC-1', region=Region(referencePoints=(
+    mdb.models['Model-1'].rootAssembly.instances['Part-1-1'].referencePoints[15], 
+    )), u1=1.0, u2=UNSET, ur3=UNSET)
+mdb.models['Model-1'].Equation(name='ConstraintV1-V3-1', terms=((1.0, 
+    'Part-1-1.Vertex1', 1), (-1.0, 'Part-1-1.Vertex3', 1), (
+    -0.0302080001831055, 'Part-1-1.MasterNode', 1)))
+mdb.models['Model-1'].Equation(name='ConstraintV1-V3-2', terms=((1.0, 
+    'Part-1-1.Vertex1', 2), (-1.0, 'Part-1-1.Vertex3', 2), (
+    -0.00526999998092651, 'Part-1-1.MasterNode', 1)))
+mdb.models['Model-1'].Equation(name='ConstraintV2-V4-1', terms=((1.0, 
+    'Part-1-1.Vertex2', 1), (-1.0, 'Part-1-1.Vertex4', 1), (0.0119519996643066, 
+    'Part-1-1.MasterNode', 1)))
+mdb.models['Model-1'].Equation(name='ConstraintV2-V4-2', terms=((1.0, 
+    'Part-1-1.Vertex2', 2), (-1.0, 'Part-1-1.Vertex4', 2), (
+    0.00526999998092651, 'Part-1-1.MasterNode', 1)))
+mdb.models['Model-1'].parts['Part-1'].Set(name='MasterFace13-0', nodes=(
+    mdb.models['Model-1'].parts['Part-1'].nodes[133:134], ))
+mdb.models['Model-1'].parts['Part-1'].Set(name='SlaveFace13-0', nodes=(
+    mdb.models['Model-1'].parts['Part-1'].nodes[233:234], ))
+mdb.models['Model-1'].Equation(name='Constraint13-1-0', terms=((1.0, 
+    'Part-1-1.MasterFace13-0', 1), (-1.0, 'Part-1-1.SlaveFace13-0', 1), (
+    -0.0210799999237061, 'Part-1-1.MasterNode', 1)))
+mdb.models['Model-1'].Equation(name='Constraint13-2-0', terms=((1.0, 
+    'Part-1-1.MasterFace13-0', 2), (-1.0, 'Part-1-1.SlaveFace13-0', 2), (
+    -0.00526999998092651, 'Part-1-1.MasterNode', 1)))
+mdb.models['Model-1'].parts['Part-1'].Set(name='MasterFace13-1', nodes=(
+    mdb.models['Model-1'].parts['Part-1'].nodes[134:135], ))
+mdb.models['Model-1'].parts['Part-1'].Set(name='SlaveFace13-1', nodes=(
+    mdb.models['Model-1'].parts['Part-1'].nodes[232:233], ))
+mdb.models['Model-1'].Equation(name='Constraint13-1-1', terms=((1.0, 
+    'Part-1-1.MasterFace13-1', 1), (-1.0, 'Part-1-1.SlaveFace13-1', 1), (
+    -0.0210799999237061, 'Part-1-1.MasterNode', 1)))
+mdb.models['Model-1'].Equation(name='Constraint13-2-1', terms=((1.0, 
+    'Part-1-1.MasterFace13-1', 2), (-1.0, 'Part-1-1.SlaveFace13-1', 2), (
+    -0.00526999998092651, 'Part-1-1.MasterNode', 1)))
+mdb.models['Model-1'].parts['Part-1'].Set(name='MasterFace13-2', nodes=(
+    mdb.models['Model-1'].parts['Part-1'].nodes[135:136], ))
+mdb.models['Model-1'].parts['Part-1'].Set(name='SlaveFace13-2', nodes=(
+    mdb.models['Model-1'].parts['Part-1'].nodes[231:232], ))
+mdb.models['Model-1'].Equation(name='Constraint13-1-2', terms=((1.0, 
+    'Part-1-1.MasterFace13-2', 1), (-1.0, 'Part-1-1.SlaveFace13-2', 1), (
+    -0.0210799999237061, 'Part-1-1.MasterNode', 1)))
+mdb.models['Model-1'].Equation(name='Constraint13-2-2', terms=((1.0, 
+    'Part-1-1.MasterFace13-2', 2), (-1.0, 'Part-1-1.SlaveFace13-2', 2), (
+    -0.00526999998092651, 'Part-1-1.MasterNode', 1)))
+mdb.models['Model-1'].parts['Part-1'].Set(name='MasterFace13-3', nodes=(
+    mdb.models['Model-1'].parts['Part-1'].nodes[136:137], ))
+mdb.models['Model-1'].parts['Part-1'].Set(name='SlaveFace13-3', nodes=(
+    mdb.models['Model-1'].parts['Part-1'].nodes[230:231], ))
+mdb.models['Model-1'].Equation(name='Constraint13-1-3', terms=((1.0, 
+    'Part-1-1.MasterFace13-3', 1), (-1.0, 'Part-1-1.SlaveFace13-3', 1), (
+    -0.0210799999237061, 'Part-1-1.MasterNode', 1)))
+mdb.models['Model-1'].Equation(name='Constraint13-2-3', terms=((1.0, 
+    'Part-1-1.MasterFace13-3', 2), (-1.0, 'Part-1-1.SlaveFace13-3', 2), (
+    -0.00526999998092651, 'Part-1-1.MasterNode', 1)))
+mdb.models['Model-1'].parts['Part-1'].Set(name='MasterFace13-4', nodes=(
+    mdb.models['Model-1'].parts['Part-1'].nodes[137:138], ))
+mdb.models['Model-1'].parts['Part-1'].Set(name='SlaveFace13-4', nodes=(
+    mdb.models['Model-1'].parts['Part-1'].nodes[229:230], ))
+mdb.models['Model-1'].Equation(name='Constraint13-1-4', terms=((1.0, 
+    'Part-1-1.MasterFace13-4', 1), (-1.0, 'Part-1-1.SlaveFace13-4', 1), (
+    -0.0210799999237061, 'Part-1-1.MasterNode', 1)))
+mdb.models['Model-1'].Equation(name='Constraint13-2-4', terms=((1.0, 
+    'Part-1-1.MasterFace13-4', 2), (-1.0, 'Part-1-1.SlaveFace13-4', 2), (
+    -0.00526999998092651, 'Part-1-1.MasterNode', 1)))
+mdb.models['Model-1'].parts['Part-1'].Set(name='MasterFace13-5', nodes=(
+    mdb.models['Model-1'].parts['Part-1'].nodes[138:139], ))
+mdb.models['Model-1'].parts['Part-1'].Set(name='SlaveFace13-5', nodes=(
+    mdb.models['Model-1'].parts['Part-1'].nodes[228:229], ))
+mdb.models['Model-1'].Equation(name='Constraint13-1-5', terms=((1.0, 
+    'Part-1-1.MasterFace13-5', 1), (-1.0, 'Part-1-1.SlaveFace13-5', 1), (
+    -0.0210799999237061, 'Part-1-1.MasterNode', 1)))
+mdb.models['Model-1'].Equation(name='Constraint13-2-5', terms=((1.0, 
+    'Part-1-1.MasterFace13-5', 2), (-1.0, 'Part-1-1.SlaveFace13-5', 2), (
+    -0.00526999998092651, 'Part-1-1.MasterNode', 1)))
+mdb.models['Model-1'].parts['Part-1'].Set(name='MasterFace13-6', nodes=(
+    mdb.models['Model-1'].parts['Part-1'].nodes[139:140], ))
+mdb.models['Model-1'].parts['Part-1'].Set(name='SlaveFace13-6', nodes=(
+    mdb.models['Model-1'].parts['Part-1'].nodes[227:228], ))
+mdb.models['Model-1'].Equation(name='Constraint13-1-6', terms=((1.0, 
+    'Part-1-1.MasterFace13-6', 1), (-1.0, 'Part-1-1.SlaveFace13-6', 1), (
+    -0.0210799999237061, 'Part-1-1.MasterNode', 1)))
+mdb.models['Model-1'].Equation(name='Constraint13-2-6', terms=((1.0, 
+    'Part-1-1.MasterFace13-6', 2), (-1.0, 'Part-1-1.SlaveFace13-6', 2), (
+    -0.00526999998092651, 'Part-1-1.MasterNode', 1)))
+mdb.models['Model-1'].parts['Part-1'].Set(name='MasterFace13-7', nodes=(
+    mdb.models['Model-1'].parts['Part-1'].nodes[140:141], ))
+mdb.models['Model-1'].parts['Part-1'].Set(name='SlaveFace13-7', nodes=(
+    mdb.models['Model-1'].parts['Part-1'].nodes[226:227], ))
+mdb.models['Model-1'].Equation(name='Constraint13-1-7', terms=((1.0, 
+    'Part-1-1.MasterFace13-7', 1), (-1.0, 'Part-1-1.SlaveFace13-7', 1), (
+    -0.0210799999237061, 'Part-1-1.MasterNode', 1)))
+mdb.models['Model-1'].Equation(name='Constraint13-2-7', terms=((1.0, 
+    'Part-1-1.MasterFace13-7', 2), (-1.0, 'Part-1-1.SlaveFace13-7', 2), (
+    -0.00526999998092651, 'Part-1-1.MasterNode', 1)))
+mdb.models['Model-1'].parts['Part-1'].Set(name='MasterFace13-8', nodes=(
+    mdb.models['Model-1'].parts['Part-1'].nodes[9:10], ))
+mdb.models['Model-1'].parts['Part-1'].Set(name='SlaveFace13-8', nodes=(
+    mdb.models['Model-1'].parts['Part-1'].nodes[20:21], ))
+mdb.models['Model-1'].Equation(name='Constraint13-1-8', terms=((1.0, 
+    'Part-1-1.MasterFace13-8', 1), (-1.0, 'Part-1-1.SlaveFace13-8', 1), (
+    -0.0210799999237061, 'Part-1-1.MasterNode', 1)))
+mdb.models['Model-1'].Equation(name='Constraint13-2-8', terms=((1.0, 
+    'Part-1-1.MasterFace13-8', 2), (-1.0, 'Part-1-1.SlaveFace13-8', 2), (
+    -0.00526999998092651, 'Part-1-1.MasterNode', 1)))
+mdb.models['Model-1'].parts['Part-1'].Set(name='MasterFace13-9', nodes=(
+    mdb.models['Model-1'].parts['Part-1'].nodes[211:212], ))
+mdb.models['Model-1'].parts['Part-1'].Set(name='SlaveFace13-9', nodes=(
+    mdb.models['Model-1'].parts['Part-1'].nodes[325:326], ))
+mdb.models['Model-1'].Equation(name='Constraint13-1-9', terms=((1.0, 
+    'Part-1-1.MasterFace13-9', 1), (-1.0, 'Part-1-1.SlaveFace13-9', 1), (
+    -0.0210799999237061, 'Part-1-1.MasterNode', 1)))
+mdb.models['Model-1'].Equation(name='Constraint13-2-9', terms=((1.0, 
+    'Part-1-1.MasterFace13-9', 2), (-1.0, 'Part-1-1.SlaveFace13-9', 2), (
+    -0.00526999998092651, 'Part-1-1.MasterNode', 1)))
+mdb.models['Model-1'].parts['Part-1'].Set(name='MasterFace13-10', nodes=(
+    mdb.models['Model-1'].parts['Part-1'].nodes[212:213], ))
+mdb.models['Model-1'].parts['Part-1'].Set(name='SlaveFace13-10', nodes=(
+    mdb.models['Model-1'].parts['Part-1'].nodes[324:325], ))
+mdb.models['Model-1'].Equation(name='Constraint13-1-10', terms=((1.0, 
+    'Part-1-1.MasterFace13-10', 1), (-1.0, 'Part-1-1.SlaveFace13-10', 1), (
+    -0.0210799999237061, 'Part-1-1.MasterNode', 1)))
+mdb.models['Model-1'].Equation(name='Constraint13-2-10', terms=((1.0, 
+    'Part-1-1.MasterFace13-10', 2), (-1.0, 'Part-1-1.SlaveFace13-10', 2), (
+    -0.00526999998092651, 'Part-1-1.MasterNode', 1)))
+mdb.models['Model-1'].parts['Part-1'].Set(name='MasterFace13-11', nodes=(
+    mdb.models['Model-1'].parts['Part-1'].nodes[16:17], ))
+mdb.models['Model-1'].parts['Part-1'].Set(name='SlaveFace13-11', nodes=(
+    mdb.models['Model-1'].parts['Part-1'].nodes[26:27], ))
+mdb.models['Model-1'].Equation(name='Constraint13-1-11', terms=((1.0, 
+    'Part-1-1.MasterFace13-11', 1), (-1.0, 'Part-1-1.SlaveFace13-11', 1), (
+    -0.0210799999237061, 'Part-1-1.MasterNode', 1)))
+mdb.models['Model-1'].Equation(name='Constraint13-2-11', terms=((1.0, 
+    'Part-1-1.MasterFace13-11', 2), (-1.0, 'Part-1-1.SlaveFace13-11', 2), (
+    -0.00526999998092651, 'Part-1-1.MasterNode', 1)))
+mdb.models['Model-1'].parts['Part-1'].Set(name='MasterFace13-12', nodes=(
+    mdb.models['Model-1'].parts['Part-1'].nodes[284:285], ))
+mdb.models['Model-1'].parts['Part-1'].Set(name='SlaveFace13-12', nodes=(
+    mdb.models['Model-1'].parts['Part-1'].nodes[364:365], ))
+mdb.models['Model-1'].Equation(name='Constraint13-1-12', terms=((1.0, 
+    'Part-1-1.MasterFace13-12', 1), (-1.0, 'Part-1-1.SlaveFace13-12', 1), (
+    -0.0210799999237061, 'Part-1-1.MasterNode', 1)))
+mdb.models['Model-1'].Equation(name='Constraint13-2-12', terms=((1.0, 
+    'Part-1-1.MasterFace13-12', 2), (-1.0, 'Part-1-1.SlaveFace13-12', 2), (
+    -0.00526999998092651, 'Part-1-1.MasterNode', 1)))
+mdb.models['Model-1'].parts['Part-1'].Set(name='MasterFace13-13', nodes=(
+    mdb.models['Model-1'].parts['Part-1'].nodes[285:286], ))
+mdb.models['Model-1'].parts['Part-1'].Set(name='SlaveFace13-13', nodes=(
+    mdb.models['Model-1'].parts['Part-1'].nodes[363:364], ))
+mdb.models['Model-1'].Equation(name='Constraint13-1-13', terms=((1.0, 
+    'Part-1-1.MasterFace13-13', 1), (-1.0, 'Part-1-1.SlaveFace13-13', 1), (
+    -0.0210799999237061, 'Part-1-1.MasterNode', 1)))
+mdb.models['Model-1'].Equation(name='Constraint13-2-13', terms=((1.0, 
+    'Part-1-1.MasterFace13-13', 2), (-1.0, 'Part-1-1.SlaveFace13-13', 2), (
+    -0.00526999998092651, 'Part-1-1.MasterNode', 1)))
+mdb.models['Model-1'].parts['Part-1'].Set(name='MasterFace13-14', nodes=(
+    mdb.models['Model-1'].parts['Part-1'].nodes[286:287], ))
+mdb.models['Model-1'].parts['Part-1'].Set(name='SlaveFace13-14', nodes=(
+    mdb.models['Model-1'].parts['Part-1'].nodes[362:363], ))
+mdb.models['Model-1'].Equation(name='Constraint13-1-14', terms=((1.0, 
+    'Part-1-1.MasterFace13-14', 1), (-1.0, 'Part-1-1.SlaveFace13-14', 1), (
+    -0.0210799999237061, 'Part-1-1.MasterNode', 1)))
+mdb.models['Model-1'].Equation(name='Constraint13-2-14', terms=((1.0, 
+    'Part-1-1.MasterFace13-14', 2), (-1.0, 'Part-1-1.SlaveFace13-14', 2), (
+    -0.00526999998092651, 'Part-1-1.MasterNode', 1)))
+mdb.models['Model-1'].parts['Part-1'].Set(name='MasterFace13-15', nodes=(
+    mdb.models['Model-1'].parts['Part-1'].nodes[287:288], ))
+mdb.models['Model-1'].parts['Part-1'].Set(name='SlaveFace13-15', nodes=(
+    mdb.models['Model-1'].parts['Part-1'].nodes[361:362], ))
+mdb.models['Model-1'].Equation(name='Constraint13-1-15', terms=((1.0, 
+    'Part-1-1.MasterFace13-15', 1), (-1.0, 'Part-1-1.SlaveFace13-15', 1), (
+    -0.0210799999237061, 'Part-1-1.MasterNode', 1)))
+mdb.models['Model-1'].Equation(name='Constraint13-2-15', terms=((1.0, 
+    'Part-1-1.MasterFace13-15', 2), (-1.0, 'Part-1-1.SlaveFace13-15', 2), (
+    -0.00526999998092651, 'Part-1-1.MasterNode', 1)))
+mdb.models['Model-1'].parts['Part-1'].Set(name='MasterFace13-16', nodes=(
+    mdb.models['Model-1'].parts['Part-1'].nodes[288:289], ))
+mdb.models['Model-1'].parts['Part-1'].Set(name='SlaveFace13-16', nodes=(
+    mdb.models['Model-1'].parts['Part-1'].nodes[360:361], ))
+mdb.models['Model-1'].Equation(name='Constraint13-1-16', terms=((1.0, 
+    'Part-1-1.MasterFace13-16', 1), (-1.0, 'Part-1-1.SlaveFace13-16', 1), (
+    -0.0210799999237061, 'Part-1-1.MasterNode', 1)))
+mdb.models['Model-1'].Equation(name='Constraint13-2-16', terms=((1.0, 
+    'Part-1-1.MasterFace13-16', 2), (-1.0, 'Part-1-1.SlaveFace13-16', 2), (
+    -0.00526999998092651, 'Part-1-1.MasterNode', 1)))
+mdb.models['Model-1'].parts['Part-1'].Set(name='MasterFace13-17', nodes=(
+    mdb.models['Model-1'].parts['Part-1'].nodes[289:290], ))
+mdb.models['Model-1'].parts['Part-1'].Set(name='SlaveFace13-17', nodes=(
+    mdb.models['Model-1'].parts['Part-1'].nodes[359:360], ))
+mdb.models['Model-1'].Equation(name='Constraint13-1-17', terms=((1.0, 
+    'Part-1-1.MasterFace13-17', 1), (-1.0, 'Part-1-1.SlaveFace13-17', 1), (
+    -0.0210799999237061, 'Part-1-1.MasterNode', 1)))
+mdb.models['Model-1'].Equation(name='Constraint13-2-17', terms=((1.0, 
+    'Part-1-1.MasterFace13-17', 2), (-1.0, 'Part-1-1.SlaveFace13-17', 2), (
+    -0.00526999998092651, 'Part-1-1.MasterNode', 1)))
+mdb.models['Model-1'].parts['Part-1'].Set(name='MasterFace13-18', nodes=(
+    mdb.models['Model-1'].parts['Part-1'].nodes[290:291], ))
+mdb.models['Model-1'].parts['Part-1'].Set(name='SlaveFace13-18', nodes=(
+    mdb.models['Model-1'].parts['Part-1'].nodes[358:359], ))
+mdb.models['Model-1'].Equation(name='Constraint13-1-18', terms=((1.0, 
+    'Part-1-1.MasterFace13-18', 1), (-1.0, 'Part-1-1.SlaveFace13-18', 1), (
+    -0.0210799999237061, 'Part-1-1.MasterNode', 1)))
+mdb.models['Model-1'].Equation(name='Constraint13-2-18', terms=((1.0, 
+    'Part-1-1.MasterFace13-18', 2), (-1.0, 'Part-1-1.SlaveFace13-18', 2), (
+    -0.00526999998092651, 'Part-1-1.MasterNode', 1)))
+mdb.models['Model-1'].parts['Part-1'].Set(name='MasterFace13-19', nodes=(
+    mdb.models['Model-1'].parts['Part-1'].nodes[291:292], ))
+mdb.models['Model-1'].parts['Part-1'].Set(name='SlaveFace13-19', nodes=(
+    mdb.models['Model-1'].parts['Part-1'].nodes[357:358], ))
+mdb.models['Model-1'].Equation(name='Constraint13-1-19', terms=((1.0, 
+    'Part-1-1.MasterFace13-19', 1), (-1.0, 'Part-1-1.SlaveFace13-19', 1), (
+    -0.0210799999237061, 'Part-1-1.MasterNode', 1)))
+mdb.models['Model-1'].Equation(name='Constraint13-2-19', terms=((1.0, 
+    'Part-1-1.MasterFace13-19', 2), (-1.0, 'Part-1-1.SlaveFace13-19', 2), (
+    -0.00526999998092651, 'Part-1-1.MasterNode', 1)))
+mdb.models['Model-1'].parts['Part-1'].Set(name='MasterFace13-20', nodes=(
+    mdb.models['Model-1'].parts['Part-1'].nodes[292:293], ))
+mdb.models['Model-1'].parts['Part-1'].Set(name='SlaveFace13-20', nodes=(
+    mdb.models['Model-1'].parts['Part-1'].nodes[356:357], ))
+mdb.models['Model-1'].Equation(name='Constraint13-1-20', terms=((1.0, 
+    'Part-1-1.MasterFace13-20', 1), (-1.0, 'Part-1-1.SlaveFace13-20', 1), (
+    -0.0210799999237061, 'Part-1-1.MasterNode', 1)))
+mdb.models['Model-1'].Equation(name='Constraint13-2-20', terms=((1.0, 
+    'Part-1-1.MasterFace13-20', 2), (-1.0, 'Part-1-1.SlaveFace13-20', 2), (
+    -0.00526999998092651, 'Part-1-1.MasterNode', 1)))
+mdb.models['Model-1'].parts['Part-1'].Set(name='MasterFace13-21', nodes=(
+    mdb.models['Model-1'].parts['Part-1'].nodes[293:294], ))
+mdb.models['Model-1'].parts['Part-1'].Set(name='SlaveFace13-21', nodes=(
+    mdb.models['Model-1'].parts['Part-1'].nodes[355:356], ))
+mdb.models['Model-1'].Equation(name='Constraint13-1-21', terms=((1.0, 
+    'Part-1-1.MasterFace13-21', 1), (-1.0, 'Part-1-1.SlaveFace13-21', 1), (
+    -0.0210799999237061, 'Part-1-1.MasterNode', 1)))
+mdb.models['Model-1'].Equation(name='Constraint13-2-21', terms=((1.0, 
+    'Part-1-1.MasterFace13-21', 2), (-1.0, 'Part-1-1.SlaveFace13-21', 2), (
+    -0.00526999998092651, 'Part-1-1.MasterNode', 1)))
+mdb.models['Model-1'].parts['Part-1'].Set(name='MasterFace13-22', nodes=(
+    mdb.models['Model-1'].parts['Part-1'].nodes[15:16], ))
+mdb.models['Model-1'].parts['Part-1'].Set(name='SlaveFace13-22', nodes=(
+    mdb.models['Model-1'].parts['Part-1'].nodes[23:24], ))
+mdb.models['Model-1'].Equation(name='Constraint13-1-22', terms=((1.0, 
+    'Part-1-1.MasterFace13-22', 1), (-1.0, 'Part-1-1.SlaveFace13-22', 1), (
+    -0.0210799999237061, 'Part-1-1.MasterNode', 1)))
+mdb.models['Model-1'].Equation(name='Constraint13-2-22', terms=((1.0, 
+    'Part-1-1.MasterFace13-22', 2), (-1.0, 'Part-1-1.SlaveFace13-22', 2), (
+    -0.00526999998092651, 'Part-1-1.MasterNode', 1)))
+mdb.models['Model-1'].parts['Part-1'].Set(name='MasterFace13-23', nodes=(
+    mdb.models['Model-1'].parts['Part-1'].nodes[176:177], ))
+mdb.models['Model-1'].parts['Part-1'].Set(name='SlaveFace13-23', nodes=(
+    mdb.models['Model-1'].parts['Part-1'].nodes[267:268], ))
+mdb.models['Model-1'].Equation(name='Constraint13-1-23', terms=((1.0, 
+    'Part-1-1.MasterFace13-23', 1), (-1.0, 'Part-1-1.SlaveFace13-23', 1), (
+    -0.0210799999237061, 'Part-1-1.MasterNode', 1)))
+mdb.models['Model-1'].Equation(name='Constraint13-2-23', terms=((1.0, 
+    'Part-1-1.MasterFace13-23', 2), (-1.0, 'Part-1-1.SlaveFace13-23', 2), (
+    -0.00526999998092651, 'Part-1-1.MasterNode', 1)))
+mdb.models['Model-1'].parts['Part-1'].Set(name='MasterFace13-24', nodes=(
+    mdb.models['Model-1'].parts['Part-1'].nodes[177:178], ))
+mdb.models['Model-1'].parts['Part-1'].Set(name='SlaveFace13-24', nodes=(
+    mdb.models['Model-1'].parts['Part-1'].nodes[266:267], ))
+mdb.models['Model-1'].Equation(name='Constraint13-1-24', terms=((1.0, 
+    'Part-1-1.MasterFace13-24', 1), (-1.0, 'Part-1-1.SlaveFace13-24', 1), (
+    -0.0210799999237061, 'Part-1-1.MasterNode', 1)))
+mdb.models['Model-1'].Equation(name='Constraint13-2-24', terms=((1.0, 
+    'Part-1-1.MasterFace13-24', 2), (-1.0, 'Part-1-1.SlaveFace13-24', 2), (
+    -0.00526999998092651, 'Part-1-1.MasterNode', 1)))
+mdb.models['Model-1'].parts['Part-1'].Set(name='MasterFace13-25', nodes=(
+    mdb.models['Model-1'].parts['Part-1'].nodes[178:179], ))
+mdb.models['Model-1'].parts['Part-1'].Set(name='SlaveFace13-25', nodes=(
+    mdb.models['Model-1'].parts['Part-1'].nodes[265:266], ))
+mdb.models['Model-1'].Equation(name='Constraint13-1-25', terms=((1.0, 
+    'Part-1-1.MasterFace13-25', 1), (-1.0, 'Part-1-1.SlaveFace13-25', 1), (
+    -0.0210799999237061, 'Part-1-1.MasterNode', 1)))
+mdb.models['Model-1'].Equation(name='Constraint13-2-25', terms=((1.0, 
+    'Part-1-1.MasterFace13-25', 2), (-1.0, 'Part-1-1.SlaveFace13-25', 2), (
+    -0.00526999998092651, 'Part-1-1.MasterNode', 1)))
+mdb.models['Model-1'].parts['Part-1'].Set(name='MasterFace13-26', nodes=(
+    mdb.models['Model-1'].parts['Part-1'].nodes[179:180], ))
+mdb.models['Model-1'].parts['Part-1'].Set(name='SlaveFace13-26', nodes=(
+    mdb.models['Model-1'].parts['Part-1'].nodes[264:265], ))
+mdb.models['Model-1'].Equation(name='Constraint13-1-26', terms=((1.0, 
+    'Part-1-1.MasterFace13-26', 1), (-1.0, 'Part-1-1.SlaveFace13-26', 1), (
+    -0.0210799999237061, 'Part-1-1.MasterNode', 1)))
+mdb.models['Model-1'].Equation(name='Constraint13-2-26', terms=((1.0, 
+    'Part-1-1.MasterFace13-26', 2), (-1.0, 'Part-1-1.SlaveFace13-26', 2), (
+    -0.00526999998092651, 'Part-1-1.MasterNode', 1)))
+mdb.models['Model-1'].parts['Part-1'].Set(name='MasterFace13-27', nodes=(
+    mdb.models['Model-1'].parts['Part-1'].nodes[180:181], ))
+mdb.models['Model-1'].parts['Part-1'].Set(name='SlaveFace13-27', nodes=(
+    mdb.models['Model-1'].parts['Part-1'].nodes[263:264], ))
+mdb.models['Model-1'].Equation(name='Constraint13-1-27', terms=((1.0, 
+    'Part-1-1.MasterFace13-27', 1), (-1.0, 'Part-1-1.SlaveFace13-27', 1), (
+    -0.0210799999237061, 'Part-1-1.MasterNode', 1)))
+mdb.models['Model-1'].Equation(name='Constraint13-2-27', terms=((1.0, 
+    'Part-1-1.MasterFace13-27', 2), (-1.0, 'Part-1-1.SlaveFace13-27', 2), (
+    -0.00526999998092651, 'Part-1-1.MasterNode', 1)))
+mdb.models['Model-1'].parts['Part-1'].Set(name='MasterFace13-28', nodes=(
+    mdb.models['Model-1'].parts['Part-1'].nodes[181:182], ))
+mdb.models['Model-1'].parts['Part-1'].Set(name='SlaveFace13-28', nodes=(
+    mdb.models['Model-1'].parts['Part-1'].nodes[262:263], ))
+mdb.models['Model-1'].Equation(name='Constraint13-1-28', terms=((1.0, 
+    'Part-1-1.MasterFace13-28', 1), (-1.0, 'Part-1-1.SlaveFace13-28', 1), (
+    -0.0210799999237061, 'Part-1-1.MasterNode', 1)))
+mdb.models['Model-1'].Equation(name='Constraint13-2-28', terms=((1.0, 
+    'Part-1-1.MasterFace13-28', 2), (-1.0, 'Part-1-1.SlaveFace13-28', 2), (
+    -0.00526999998092651, 'Part-1-1.MasterNode', 1)))
+mdb.models['Model-1'].parts['Part-1'].Set(name='MasterFace13-29', nodes=(
+    mdb.models['Model-1'].parts['Part-1'].nodes[182:183], ))
+mdb.models['Model-1'].parts['Part-1'].Set(name='SlaveFace13-29', nodes=(
+    mdb.models['Model-1'].parts['Part-1'].nodes[261:262], ))
+mdb.models['Model-1'].Equation(name='Constraint13-1-29', terms=((1.0, 
+    'Part-1-1.MasterFace13-29', 1), (-1.0, 'Part-1-1.SlaveFace13-29', 1), (
+    -0.0210799999237061, 'Part-1-1.MasterNode', 1)))
+mdb.models['Model-1'].Equation(name='Constraint13-2-29', terms=((1.0, 
+    'Part-1-1.MasterFace13-29', 2), (-1.0, 'Part-1-1.SlaveFace13-29', 2), (
+    -0.00526999998092651, 'Part-1-1.MasterNode', 1)))
+mdb.models['Model-1'].parts['Part-1'].Set(name='MasterFace13-30', nodes=(
+    mdb.models['Model-1'].parts['Part-1'].nodes[183:184], ))
+mdb.models['Model-1'].parts['Part-1'].Set(name='SlaveFace13-30', nodes=(
+    mdb.models['Model-1'].parts['Part-1'].nodes[260:261], ))
+mdb.models['Model-1'].Equation(name='Constraint13-1-30', terms=((1.0, 
+    'Part-1-1.MasterFace13-30', 1), (-1.0, 'Part-1-1.SlaveFace13-30', 1), (
+    -0.0210799999237061, 'Part-1-1.MasterNode', 1)))
+mdb.models['Model-1'].Equation(name='Constraint13-2-30', terms=((1.0, 
+    'Part-1-1.MasterFace13-30', 2), (-1.0, 'Part-1-1.SlaveFace13-30', 2), (
+    -0.00526999998092651, 'Part-1-1.MasterNode', 1)))
+mdb.models['Model-1'].parts['Part-1'].Set(name='MasterFace13-31', nodes=(
+    mdb.models['Model-1'].parts['Part-1'].nodes[184:185], ))
+mdb.models['Model-1'].parts['Part-1'].Set(name='SlaveFace13-31', nodes=(
+    mdb.models['Model-1'].parts['Part-1'].nodes[259:260], ))
+mdb.models['Model-1'].Equation(name='Constraint13-1-31', terms=((1.0, 
+    'Part-1-1.MasterFace13-31', 1), (-1.0, 'Part-1-1.SlaveFace13-31', 1), (
+    -0.0210799999237061, 'Part-1-1.MasterNode', 1)))
+mdb.models['Model-1'].Equation(name='Constraint13-2-31', terms=((1.0, 
+    'Part-1-1.MasterFace13-31', 2), (-1.0, 'Part-1-1.SlaveFace13-31', 2), (
+    -0.00526999998092651, 'Part-1-1.MasterNode', 1)))
+mdb.models['Model-1'].parts['Part-1'].Set(name='MasterFace13-32', nodes=(
+    mdb.models['Model-1'].parts['Part-1'].nodes[185:186], ))
+mdb.models['Model-1'].parts['Part-1'].Set(name='SlaveFace13-32', nodes=(
+    mdb.models['Model-1'].parts['Part-1'].nodes[258:259], ))
+mdb.models['Model-1'].Equation(name='Constraint13-1-32', terms=((1.0, 
+    'Part-1-1.MasterFace13-32', 1), (-1.0, 'Part-1-1.SlaveFace13-32', 1), (
+    -0.0210799999237061, 'Part-1-1.MasterNode', 1)))
+mdb.models['Model-1'].Equation(name='Constraint13-2-32', terms=((1.0, 
+    'Part-1-1.MasterFace13-32', 2), (-1.0, 'Part-1-1.SlaveFace13-32', 2), (
+    -0.00526999998092651, 'Part-1-1.MasterNode', 1)))
+mdb.models['Model-1'].parts['Part-1'].Set(name='MasterFace13-33', nodes=(
+    mdb.models['Model-1'].parts['Part-1'].nodes[7:8], ))
+mdb.models['Model-1'].parts['Part-1'].Set(name='SlaveFace13-33', nodes=(
+    mdb.models['Model-1'].parts['Part-1'].nodes[12:13], ))
+mdb.models['Model-1'].Equation(name='Constraint13-1-33', terms=((1.0, 
+    'Part-1-1.MasterFace13-33', 1), (-1.0, 'Part-1-1.SlaveFace13-33', 1), (
+    -0.0210799999237061, 'Part-1-1.MasterNode', 1)))
+mdb.models['Model-1'].Equation(name='Constraint13-2-33', terms=((1.0, 
+    'Part-1-1.MasterFace13-33', 2), (-1.0, 'Part-1-1.SlaveFace13-33', 2), (
+    -0.00526999998092651, 'Part-1-1.MasterNode', 1)))
+mdb.models['Model-1'].parts['Part-1'].Set(name='MasterFace13-34', nodes=(
+    mdb.models['Model-1'].parts['Part-1'].nodes[97:98], ))
+mdb.models['Model-1'].parts['Part-1'].Set(name='SlaveFace13-34', nodes=(
+    mdb.models['Model-1'].parts['Part-1'].nodes[142:143], ))
+mdb.models['Model-1'].Equation(name='Constraint13-1-34', terms=((1.0, 
+    'Part-1-1.MasterFace13-34', 1), (-1.0, 'Part-1-1.SlaveFace13-34', 1), (
+    -0.0210799999237061, 'Part-1-1.MasterNode', 1)))
+mdb.models['Model-1'].Equation(name='Constraint13-2-34', terms=((1.0, 
+    'Part-1-1.MasterFace13-34', 2), (-1.0, 'Part-1-1.SlaveFace13-34', 2), (
+    -0.00526999998092651, 'Part-1-1.MasterNode', 1)))
+mdb.models['Model-1'].parts['Part-1'].Set(name='MasterFace13-35', nodes=(
+    mdb.models['Model-1'].parts['Part-1'].nodes[98:99], ))
+mdb.models['Model-1'].parts['Part-1'].Set(name='SlaveFace13-35', nodes=(
+    mdb.models['Model-1'].parts['Part-1'].nodes[141:142], ))
+mdb.models['Model-1'].Equation(name='Constraint13-1-35', terms=((1.0, 
+    'Part-1-1.MasterFace13-35', 1), (-1.0, 'Part-1-1.SlaveFace13-35', 1), (
+    -0.0210799999237061, 'Part-1-1.MasterNode', 1)))
+mdb.models['Model-1'].Equation(name='Constraint13-2-35', terms=((1.0, 
+    'Part-1-1.MasterFace13-35', 2), (-1.0, 'Part-1-1.SlaveFace13-35', 2), (
+    -0.00526999998092651, 'Part-1-1.MasterNode', 1)))
+mdb.models['Model-1'].parts['Part-1'].Set(name='MasterFace13-36', nodes=(
+    mdb.models['Model-1'].parts['Part-1'].nodes[1:2], ))
+mdb.models['Model-1'].parts['Part-1'].Set(name='SlaveFace13-36', nodes=(
+    mdb.models['Model-1'].parts['Part-1'].nodes[3:4], ))
+mdb.models['Model-1'].Equation(name='Constraint13-1-36', terms=((1.0, 
+    'Part-1-1.MasterFace13-36', 1), (-1.0, 'Part-1-1.SlaveFace13-36', 1), (
+    -0.0210799999237061, 'Part-1-1.MasterNode', 1)))
+mdb.models['Model-1'].Equation(name='Constraint13-2-36', terms=((1.0, 
+    'Part-1-1.MasterFace13-36', 2), (-1.0, 'Part-1-1.SlaveFace13-36', 2), (
+    -0.00526999998092651, 'Part-1-1.MasterNode', 1)))
+mdb.models['Model-1'].parts['Part-1'].Set(name='MasterFace13-37', nodes=(
+    mdb.models['Model-1'].parts['Part-1'].nodes[40:41], ))
+mdb.models['Model-1'].parts['Part-1'].Set(name='SlaveFace13-37', nodes=(
+    mdb.models['Model-1'].parts['Part-1'].nodes[84:85], ))
+mdb.models['Model-1'].Equation(name='Constraint13-1-37', terms=((1.0, 
+    'Part-1-1.MasterFace13-37', 1), (-1.0, 'Part-1-1.SlaveFace13-37', 1), (
+    -0.0210799999237061, 'Part-1-1.MasterNode', 1)))
+mdb.models['Model-1'].Equation(name='Constraint13-2-37', terms=((1.0, 
+    'Part-1-1.MasterFace13-37', 2), (-1.0, 'Part-1-1.SlaveFace13-37', 2), (
+    -0.00526999998092651, 'Part-1-1.MasterNode', 1)))
+mdb.models['Model-1'].parts['Part-1'].Set(name='MasterFace13-38', nodes=(
+    mdb.models['Model-1'].parts['Part-1'].nodes[41:42], ))
+mdb.models['Model-1'].parts['Part-1'].Set(name='SlaveFace13-38', nodes=(
+    mdb.models['Model-1'].parts['Part-1'].nodes[83:84], ))
+mdb.models['Model-1'].Equation(name='Constraint13-1-38', terms=((1.0, 
+    'Part-1-1.MasterFace13-38', 1), (-1.0, 'Part-1-1.SlaveFace13-38', 1), (
+    -0.0210799999237061, 'Part-1-1.MasterNode', 1)))
+mdb.models['Model-1'].Equation(name='Constraint13-2-38', terms=((1.0, 
+    'Part-1-1.MasterFace13-38', 2), (-1.0, 'Part-1-1.SlaveFace13-38', 2), (
+    -0.00526999998092651, 'Part-1-1.MasterNode', 1)))
+mdb.models['Model-1'].parts['Part-1'].Set(name='MasterFace13-39', nodes=(
+    mdb.models['Model-1'].parts['Part-1'].nodes[42:43], ))
+mdb.models['Model-1'].parts['Part-1'].Set(name='SlaveFace13-39', nodes=(
+    mdb.models['Model-1'].parts['Part-1'].nodes[82:83], ))
+mdb.models['Model-1'].Equation(name='Constraint13-1-39', terms=((1.0, 
+    'Part-1-1.MasterFace13-39', 1), (-1.0, 'Part-1-1.SlaveFace13-39', 1), (
+    -0.0210799999237061, 'Part-1-1.MasterNode', 1)))
+mdb.models['Model-1'].Equation(name='Constraint13-2-39', terms=((1.0, 
+    'Part-1-1.MasterFace13-39', 2), (-1.0, 'Part-1-1.SlaveFace13-39', 2), (
+    -0.00526999998092651, 'Part-1-1.MasterNode', 1)))
+mdb.models['Model-1'].parts['Part-1'].Set(name='MasterFace13-40', nodes=(
+    mdb.models['Model-1'].parts['Part-1'].nodes[43:44], ))
+mdb.models['Model-1'].parts['Part-1'].Set(name='SlaveFace13-40', nodes=(
+    mdb.models['Model-1'].parts['Part-1'].nodes[81:82], ))
+mdb.models['Model-1'].Equation(name='Constraint13-1-40', terms=((1.0, 
+    'Part-1-1.MasterFace13-40', 1), (-1.0, 'Part-1-1.SlaveFace13-40', 1), (
+    -0.0210799999237061, 'Part-1-1.MasterNode', 1)))
+mdb.models['Model-1'].Equation(name='Constraint13-2-40', terms=((1.0, 
+    'Part-1-1.MasterFace13-40', 2), (-1.0, 'Part-1-1.SlaveFace13-40', 2), (
+    -0.00526999998092651, 'Part-1-1.MasterNode', 1)))
+mdb.models['Model-1'].parts['Part-1'].Set(name='MasterFace13-41', nodes=(
+    mdb.models['Model-1'].parts['Part-1'].nodes[44:45], ))
+mdb.models['Model-1'].parts['Part-1'].Set(name='SlaveFace13-41', nodes=(
+    mdb.models['Model-1'].parts['Part-1'].nodes[80:81], ))
+mdb.models['Model-1'].Equation(name='Constraint13-1-41', terms=((1.0, 
+    'Part-1-1.MasterFace13-41', 1), (-1.0, 'Part-1-1.SlaveFace13-41', 1), (
+    -0.0210799999237061, 'Part-1-1.MasterNode', 1)))
+mdb.models['Model-1'].Equation(name='Constraint13-2-41', terms=((1.0, 
+    'Part-1-1.MasterFace13-41', 2), (-1.0, 'Part-1-1.SlaveFace13-41', 2), (
+    -0.00526999998092651, 'Part-1-1.MasterNode', 1)))
+mdb.models['Model-1'].parts['Part-1'].Set(name='MasterFace13-42', nodes=(
+    mdb.models['Model-1'].parts['Part-1'].nodes[45:46], ))
+mdb.models['Model-1'].parts['Part-1'].Set(name='SlaveFace13-42', nodes=(
+    mdb.models['Model-1'].parts['Part-1'].nodes[79:80], ))
+mdb.models['Model-1'].Equation(name='Constraint13-1-42', terms=((1.0, 
+    'Part-1-1.MasterFace13-42', 1), (-1.0, 'Part-1-1.SlaveFace13-42', 1), (
+    -0.0210799999237061, 'Part-1-1.MasterNode', 1)))
+mdb.models['Model-1'].Equation(name='Constraint13-2-42', terms=((1.0, 
+    'Part-1-1.MasterFace13-42', 2), (-1.0, 'Part-1-1.SlaveFace13-42', 2), (
+    -0.00526999998092651, 'Part-1-1.MasterNode', 1)))
+mdb.models['Model-1'].parts['Part-1'].Set(name='MasterFace13-43', nodes=(
+    mdb.models['Model-1'].parts['Part-1'].nodes[46:47], ))
+mdb.models['Model-1'].parts['Part-1'].Set(name='SlaveFace13-43', nodes=(
+    mdb.models['Model-1'].parts['Part-1'].nodes[78:79], ))
+mdb.models['Model-1'].Equation(name='Constraint13-1-43', terms=((1.0, 
+    'Part-1-1.MasterFace13-43', 1), (-1.0, 'Part-1-1.SlaveFace13-43', 1), (
+    -0.0210799999237061, 'Part-1-1.MasterNode', 1)))
+mdb.models['Model-1'].Equation(name='Constraint13-2-43', terms=((1.0, 
+    'Part-1-1.MasterFace13-43', 2), (-1.0, 'Part-1-1.SlaveFace13-43', 2), (
+    -0.00526999998092651, 'Part-1-1.MasterNode', 1)))
+mdb.models['Model-1'].parts['Part-1'].Set(name='MasterFace13-44', nodes=(
+    mdb.models['Model-1'].parts['Part-1'].nodes[47:48], ))
+mdb.models['Model-1'].parts['Part-1'].Set(name='SlaveFace13-44', nodes=(
+    mdb.models['Model-1'].parts['Part-1'].nodes[77:78], ))
+mdb.models['Model-1'].Equation(name='Constraint13-1-44', terms=((1.0, 
+    'Part-1-1.MasterFace13-44', 1), (-1.0, 'Part-1-1.SlaveFace13-44', 1), (
+    -0.0210799999237061, 'Part-1-1.MasterNode', 1)))
+mdb.models['Model-1'].Equation(name='Constraint13-2-44', terms=((1.0, 
+    'Part-1-1.MasterFace13-44', 2), (-1.0, 'Part-1-1.SlaveFace13-44', 2), (
+    -0.00526999998092651, 'Part-1-1.MasterNode', 1)))
+mdb.models['Model-1'].parts['Part-1'].Set(name='MasterFace24-0', nodes=(
+    mdb.models['Model-1'].parts['Part-1'].nodes[76:77], ))
+mdb.models['Model-1'].parts['Part-1'].Set(name='SlaveFace24-0', nodes=(
+    mdb.models['Model-1'].parts['Part-1'].nodes[234:235], ))
+mdb.models['Model-1'].Equation(name='Constraint24-1-0', terms=((1.0, 
+    'Part-1-1.MasterFace24-0', 1), (-1.0, 'Part-1-1.SlaveFace24-0', 1), (
+    -0.00912800025939941, 'Part-1-1.MasterNode', 1)))
+mdb.models['Model-1'].Equation(name='Constraint24-2-0', terms=((1.0, 
+    'Part-1-1.MasterFace24-0', 2), (-1.0, 'Part-1-1.SlaveFace24-0', 2), (-0.0, 
+    'Part-1-1.MasterNode', 1)))
+mdb.models['Model-1'].parts['Part-1'].Set(name='MasterFace24-1', nodes=(
+    mdb.models['Model-1'].parts['Part-1'].nodes[75:76], ))
+mdb.models['Model-1'].parts['Part-1'].Set(name='SlaveFace24-1', nodes=(
+    mdb.models['Model-1'].parts['Part-1'].nodes[235:236], ))
+mdb.models['Model-1'].Equation(name='Constraint24-1-1', terms=((1.0, 
+    'Part-1-1.MasterFace24-1', 1), (-1.0, 'Part-1-1.SlaveFace24-1', 1), (
+    -0.00912800025939941, 'Part-1-1.MasterNode', 1)))
+mdb.models['Model-1'].Equation(name='Constraint24-2-1', terms=((1.0, 
+    'Part-1-1.MasterFace24-1', 2), (-1.0, 'Part-1-1.SlaveFace24-1', 2), (-0.0, 
+    'Part-1-1.MasterNode', 1)))
+mdb.models['Model-1'].parts['Part-1'].Set(name='MasterFace24-2', nodes=(
+    mdb.models['Model-1'].parts['Part-1'].nodes[74:75], ))
+mdb.models['Model-1'].parts['Part-1'].Set(name='SlaveFace24-2', nodes=(
+    mdb.models['Model-1'].parts['Part-1'].nodes[236:237], ))
+mdb.models['Model-1'].Equation(name='Constraint24-1-2', terms=((1.0, 
+    'Part-1-1.MasterFace24-2', 1), (-1.0, 'Part-1-1.SlaveFace24-2', 1), (
+    -0.00912800025939941, 'Part-1-1.MasterNode', 1)))
+mdb.models['Model-1'].Equation(name='Constraint24-2-2', terms=((1.0, 
+    'Part-1-1.MasterFace24-2', 2), (-1.0, 'Part-1-1.SlaveFace24-2', 2), (-0.0, 
+    'Part-1-1.MasterNode', 1)))
+mdb.models['Model-1'].parts['Part-1'].Set(name='MasterFace24-3', nodes=(
+    mdb.models['Model-1'].parts['Part-1'].nodes[73:74], ))
+mdb.models['Model-1'].parts['Part-1'].Set(name='SlaveFace24-3', nodes=(
+    mdb.models['Model-1'].parts['Part-1'].nodes[237:238], ))
+mdb.models['Model-1'].Equation(name='Constraint24-1-3', terms=((1.0, 
+    'Part-1-1.MasterFace24-3', 1), (-1.0, 'Part-1-1.SlaveFace24-3', 1), (
+    -0.00912800025939941, 'Part-1-1.MasterNode', 1)))
+mdb.models['Model-1'].Equation(name='Constraint24-2-3', terms=((1.0, 
+    'Part-1-1.MasterFace24-3', 2), (-1.0, 'Part-1-1.SlaveFace24-3', 2), (-0.0, 
+    'Part-1-1.MasterNode', 1)))
+mdb.models['Model-1'].parts['Part-1'].Set(name='MasterFace24-4', nodes=(
+    mdb.models['Model-1'].parts['Part-1'].nodes[72:73], ))
+mdb.models['Model-1'].parts['Part-1'].Set(name='SlaveFace24-4', nodes=(
+    mdb.models['Model-1'].parts['Part-1'].nodes[238:239], ))
+mdb.models['Model-1'].Equation(name='Constraint24-1-4', terms=((1.0, 
+    'Part-1-1.MasterFace24-4', 1), (-1.0, 'Part-1-1.SlaveFace24-4', 1), (
+    -0.00912800025939941, 'Part-1-1.MasterNode', 1)))
+mdb.models['Model-1'].Equation(name='Constraint24-2-4', terms=((1.0, 
+    'Part-1-1.MasterFace24-4', 2), (-1.0, 'Part-1-1.SlaveFace24-4', 2), (-0.0, 
+    'Part-1-1.MasterNode', 1)))
+mdb.models['Model-1'].parts['Part-1'].Set(name='MasterFace24-5', nodes=(
+    mdb.models['Model-1'].parts['Part-1'].nodes[71:72], ))
+mdb.models['Model-1'].parts['Part-1'].Set(name='SlaveFace24-5', nodes=(
+    mdb.models['Model-1'].parts['Part-1'].nodes[239:240], ))
+mdb.models['Model-1'].Equation(name='Constraint24-1-5', terms=((1.0, 
+    'Part-1-1.MasterFace24-5', 1), (-1.0, 'Part-1-1.SlaveFace24-5', 1), (
+    -0.00912800025939941, 'Part-1-1.MasterNode', 1)))
+mdb.models['Model-1'].Equation(name='Constraint24-2-5', terms=((1.0, 
+    'Part-1-1.MasterFace24-5', 2), (-1.0, 'Part-1-1.SlaveFace24-5', 2), (-0.0, 
+    'Part-1-1.MasterNode', 1)))
+mdb.models['Model-1'].parts['Part-1'].Set(name='MasterFace24-6', nodes=(
+    mdb.models['Model-1'].parts['Part-1'].nodes[70:71], ))
+mdb.models['Model-1'].parts['Part-1'].Set(name='SlaveFace24-6', nodes=(
+    mdb.models['Model-1'].parts['Part-1'].nodes[240:241], ))
+mdb.models['Model-1'].Equation(name='Constraint24-1-6', terms=((1.0, 
+    'Part-1-1.MasterFace24-6', 1), (-1.0, 'Part-1-1.SlaveFace24-6', 1), (
+    -0.00912800025939941, 'Part-1-1.MasterNode', 1)))
+mdb.models['Model-1'].Equation(name='Constraint24-2-6', terms=((1.0, 
+    'Part-1-1.MasterFace24-6', 2), (-1.0, 'Part-1-1.SlaveFace24-6', 2), (-0.0, 
+    'Part-1-1.MasterNode', 1)))
+mdb.models['Model-1'].parts['Part-1'].Set(name='MasterFace24-7', nodes=(
+    mdb.models['Model-1'].parts['Part-1'].nodes[69:70], ))
+mdb.models['Model-1'].parts['Part-1'].Set(name='SlaveFace24-7', nodes=(
+    mdb.models['Model-1'].parts['Part-1'].nodes[241:242], ))
+mdb.models['Model-1'].Equation(name='Constraint24-1-7', terms=((1.0, 
+    'Part-1-1.MasterFace24-7', 1), (-1.0, 'Part-1-1.SlaveFace24-7', 1), (
+    -0.00912800025939941, 'Part-1-1.MasterNode', 1)))
+mdb.models['Model-1'].Equation(name='Constraint24-2-7', terms=((1.0, 
+    'Part-1-1.MasterFace24-7', 2), (-1.0, 'Part-1-1.SlaveFace24-7', 2), (-0.0, 
+    'Part-1-1.MasterNode', 1)))
+mdb.models['Model-1'].parts['Part-1'].Set(name='MasterFace24-8', nodes=(
+    mdb.models['Model-1'].parts['Part-1'].nodes[4:5], ))
+mdb.models['Model-1'].parts['Part-1'].Set(name='SlaveFace24-8', nodes=(
+    mdb.models['Model-1'].parts['Part-1'].nodes[19:20], ))
+mdb.models['Model-1'].Equation(name='Constraint24-1-8', terms=((1.0, 
+    'Part-1-1.MasterFace24-8', 1), (-1.0, 'Part-1-1.SlaveFace24-8', 1), (
+    -0.00912800025939941, 'Part-1-1.MasterNode', 1)))
+mdb.models['Model-1'].Equation(name='Constraint24-2-8', terms=((1.0, 
+    'Part-1-1.MasterFace24-8', 2), (-1.0, 'Part-1-1.SlaveFace24-8', 2), (-0.0, 
+    'Part-1-1.MasterNode', 1)))
+mdb.models['Model-1'].parts['Part-1'].Set(name='MasterFace24-9', nodes=(
+    mdb.models['Model-1'].parts['Part-1'].nodes[157:158], ))
+mdb.models['Model-1'].parts['Part-1'].Set(name='SlaveFace24-9', nodes=(
+    mdb.models['Model-1'].parts['Part-1'].nodes[309:310], ))
+mdb.models['Model-1'].Equation(name='Constraint24-1-9', terms=((1.0, 
+    'Part-1-1.MasterFace24-9', 1), (-1.0, 'Part-1-1.SlaveFace24-9', 1), (
+    -0.00912800025939941, 'Part-1-1.MasterNode', 1)))
+mdb.models['Model-1'].Equation(name='Constraint24-2-9', terms=((1.0, 
+    'Part-1-1.MasterFace24-9', 2), (-1.0, 'Part-1-1.SlaveFace24-9', 2), (-0.0, 
+    'Part-1-1.MasterNode', 1)))
+mdb.models['Model-1'].parts['Part-1'].Set(name='MasterFace24-10', nodes=(
+    mdb.models['Model-1'].parts['Part-1'].nodes[156:157], ))
+mdb.models['Model-1'].parts['Part-1'].Set(name='SlaveFace24-10', nodes=(
+    mdb.models['Model-1'].parts['Part-1'].nodes[310:311], ))
+mdb.models['Model-1'].Equation(name='Constraint24-1-10', terms=((1.0, 
+    'Part-1-1.MasterFace24-10', 1), (-1.0, 'Part-1-1.SlaveFace24-10', 1), (
+    -0.00912800025939941, 'Part-1-1.MasterNode', 1)))
+mdb.models['Model-1'].Equation(name='Constraint24-2-10', terms=((1.0, 
+    'Part-1-1.MasterFace24-10', 2), (-1.0, 'Part-1-1.SlaveFace24-10', 2), (
+    -0.0, 'Part-1-1.MasterNode', 1)))
+mdb.models['Model-1'].parts['Part-1'].Set(name='MasterFace24-11', nodes=(
+    mdb.models['Model-1'].parts['Part-1'].nodes[155:156], ))
+mdb.models['Model-1'].parts['Part-1'].Set(name='SlaveFace24-11', nodes=(
+    mdb.models['Model-1'].parts['Part-1'].nodes[311:312], ))
+mdb.models['Model-1'].Equation(name='Constraint24-1-11', terms=((1.0, 
+    'Part-1-1.MasterFace24-11', 1), (-1.0, 'Part-1-1.SlaveFace24-11', 1), (
+    -0.00912800025939941, 'Part-1-1.MasterNode', 1)))
+mdb.models['Model-1'].Equation(name='Constraint24-2-11', terms=((1.0, 
+    'Part-1-1.MasterFace24-11', 2), (-1.0, 'Part-1-1.SlaveFace24-11', 2), (
+    -0.0, 'Part-1-1.MasterNode', 1)))
+mdb.models['Model-1'].parts['Part-1'].Set(name='MasterFace24-12', nodes=(
+    mdb.models['Model-1'].parts['Part-1'].nodes[8:9], ))
+mdb.models['Model-1'].parts['Part-1'].Set(name='SlaveFace24-12', nodes=(
+    mdb.models['Model-1'].parts['Part-1'].nodes[18:19], ))
+mdb.models['Model-1'].Equation(name='Constraint24-1-12', terms=((1.0, 
+    'Part-1-1.MasterFace24-12', 1), (-1.0, 'Part-1-1.SlaveFace24-12', 1), (
+    -0.00912800025939941, 'Part-1-1.MasterNode', 1)))
+mdb.models['Model-1'].Equation(name='Constraint24-2-12', terms=((1.0, 
+    'Part-1-1.MasterFace24-12', 2), (-1.0, 'Part-1-1.SlaveFace24-12', 2), (
+    -0.0, 'Part-1-1.MasterNode', 1)))
+mdb.models['Model-1'].parts['Part-1'].Set(name='MasterFace24-13', nodes=(
+    mdb.models['Model-1'].parts['Part-1'].nodes[101:102], ))
+mdb.models['Model-1'].parts['Part-1'].Set(name='SlaveFace24-13', nodes=(
+    mdb.models['Model-1'].parts['Part-1'].nodes[208:209], ))
+mdb.models['Model-1'].Equation(name='Constraint24-1-13', terms=((1.0, 
+    'Part-1-1.MasterFace24-13', 1), (-1.0, 'Part-1-1.SlaveFace24-13', 1), (
+    -0.00912800025939941, 'Part-1-1.MasterNode', 1)))
+mdb.models['Model-1'].Equation(name='Constraint24-2-13', terms=((1.0, 
+    'Part-1-1.MasterFace24-13', 2), (-1.0, 'Part-1-1.SlaveFace24-13', 2), (
+    -0.0, 'Part-1-1.MasterNode', 1)))
+mdb.models['Model-1'].parts['Part-1'].Set(name='MasterFace24-14', nodes=(
+    mdb.models['Model-1'].parts['Part-1'].nodes[100:101], ))
+mdb.models['Model-1'].parts['Part-1'].Set(name='SlaveFace24-14', nodes=(
+    mdb.models['Model-1'].parts['Part-1'].nodes[209:210], ))
+mdb.models['Model-1'].Equation(name='Constraint24-1-14', terms=((1.0, 
+    'Part-1-1.MasterFace24-14', 1), (-1.0, 'Part-1-1.SlaveFace24-14', 1), (
+    -0.00912800025939941, 'Part-1-1.MasterNode', 1)))
+mdb.models['Model-1'].Equation(name='Constraint24-2-14', terms=((1.0, 
+    'Part-1-1.MasterFace24-14', 2), (-1.0, 'Part-1-1.SlaveFace24-14', 2), (
+    -0.0, 'Part-1-1.MasterNode', 1)))
+mdb.models['Model-1'].parts['Part-1'].Set(name='MasterFace24-15', nodes=(
+    mdb.models['Model-1'].parts['Part-1'].nodes[99:100], ))
+mdb.models['Model-1'].parts['Part-1'].Set(name='SlaveFace24-15', nodes=(
+    mdb.models['Model-1'].parts['Part-1'].nodes[210:211], ))
+mdb.models['Model-1'].Equation(name='Constraint24-1-15', terms=((1.0, 
+    'Part-1-1.MasterFace24-15', 1), (-1.0, 'Part-1-1.SlaveFace24-15', 1), (
+    -0.00912800025939941, 'Part-1-1.MasterNode', 1)))
+mdb.models['Model-1'].Equation(name='Constraint24-2-15', terms=((1.0, 
+    'Part-1-1.MasterFace24-15', 2), (-1.0, 'Part-1-1.SlaveFace24-15', 2), (
+    -0.0, 'Part-1-1.MasterNode', 1)))
+mdb.models['Model-1'].parts['Part-1'].Set(name='MasterFace24-16', nodes=(
+    mdb.models['Model-1'].parts['Part-1'].nodes[0:1], ))
+mdb.models['Model-1'].parts['Part-1'].Set(name='SlaveFace24-16', nodes=(
+    mdb.models['Model-1'].parts['Part-1'].nodes[10:11], ))
+mdb.models['Model-1'].Equation(name='Constraint24-1-16', terms=((1.0, 
+    'Part-1-1.MasterFace24-16', 1), (-1.0, 'Part-1-1.SlaveFace24-16', 1), (
+    -0.00912800025939941, 'Part-1-1.MasterNode', 1)))
+mdb.models['Model-1'].Equation(name='Constraint24-2-16', terms=((1.0, 
+    'Part-1-1.MasterFace24-16', 2), (-1.0, 'Part-1-1.SlaveFace24-16', 2), (
+    -0.0, 'Part-1-1.MasterNode', 1)))
+mdb.models['Model-1'].parts['Part-1'].Set(name='MasterFace24-17', nodes=(
+    mdb.models['Model-1'].parts['Part-1'].nodes[55:56], ))
+mdb.models['Model-1'].parts['Part-1'].Set(name='SlaveFace24-17', nodes=(
+    mdb.models['Model-1'].parts['Part-1'].nodes[125:126], ))
+mdb.models['Model-1'].Equation(name='Constraint24-1-17', terms=((1.0, 
+    'Part-1-1.MasterFace24-17', 1), (-1.0, 'Part-1-1.SlaveFace24-17', 1), (
+    -0.00912800025939941, 'Part-1-1.MasterNode', 1)))
+mdb.models['Model-1'].Equation(name='Constraint24-2-17', terms=((1.0, 
+    'Part-1-1.MasterFace24-17', 2), (-1.0, 'Part-1-1.SlaveFace24-17', 2), (
+    -0.0, 'Part-1-1.MasterNode', 1)))
+mdb.models['Model-1'].parts['Part-1'].Set(name='MasterFace24-18', nodes=(
+    mdb.models['Model-1'].parts['Part-1'].nodes[54:55], ))
+mdb.models['Model-1'].parts['Part-1'].Set(name='SlaveFace24-18', nodes=(
+    mdb.models['Model-1'].parts['Part-1'].nodes[126:127], ))
+mdb.models['Model-1'].Equation(name='Constraint24-1-18', terms=((1.0, 
+    'Part-1-1.MasterFace24-18', 1), (-1.0, 'Part-1-1.SlaveFace24-18', 1), (
+    -0.00912800025939941, 'Part-1-1.MasterNode', 1)))
+mdb.models['Model-1'].Equation(name='Constraint24-2-18', terms=((1.0, 
+    'Part-1-1.MasterFace24-18', 2), (-1.0, 'Part-1-1.SlaveFace24-18', 2), (
+    -0.0, 'Part-1-1.MasterNode', 1)))
+mdb.models['Model-1'].parts['Part-1'].Set(name='MasterFace24-19', nodes=(
+    mdb.models['Model-1'].parts['Part-1'].nodes[53:54], ))
+mdb.models['Model-1'].parts['Part-1'].Set(name='SlaveFace24-19', nodes=(
+    mdb.models['Model-1'].parts['Part-1'].nodes[127:128], ))
+mdb.models['Model-1'].Equation(name='Constraint24-1-19', terms=((1.0, 
+    'Part-1-1.MasterFace24-19', 1), (-1.0, 'Part-1-1.SlaveFace24-19', 1), (
+    -0.00912800025939941, 'Part-1-1.MasterNode', 1)))
+mdb.models['Model-1'].Equation(name='Constraint24-2-19', terms=((1.0, 
+    'Part-1-1.MasterFace24-19', 2), (-1.0, 'Part-1-1.SlaveFace24-19', 2), (
+    -0.0, 'Part-1-1.MasterNode', 1)))
+mdb.models['Model-1'].parts['Part-1'].Set(name='MasterFace24-20', nodes=(
+    mdb.models['Model-1'].parts['Part-1'].nodes[52:53], ))
+mdb.models['Model-1'].parts['Part-1'].Set(name='SlaveFace24-20', nodes=(
+    mdb.models['Model-1'].parts['Part-1'].nodes[128:129], ))
+mdb.models['Model-1'].Equation(name='Constraint24-1-20', terms=((1.0, 
+    'Part-1-1.MasterFace24-20', 1), (-1.0, 'Part-1-1.SlaveFace24-20', 1), (
+    -0.00912800025939941, 'Part-1-1.MasterNode', 1)))
+mdb.models['Model-1'].Equation(name='Constraint24-2-20', terms=((1.0, 
+    'Part-1-1.MasterFace24-20', 2), (-1.0, 'Part-1-1.SlaveFace24-20', 2), (
+    -0.0, 'Part-1-1.MasterNode', 1)))
+mdb.models['Model-1'].parts['Part-1'].Set(name='MasterFace24-21', nodes=(
+    mdb.models['Model-1'].parts['Part-1'].nodes[51:52], ))
+mdb.models['Model-1'].parts['Part-1'].Set(name='SlaveFace24-21', nodes=(
+    mdb.models['Model-1'].parts['Part-1'].nodes[129:130], ))
+mdb.models['Model-1'].Equation(name='Constraint24-1-21', terms=((1.0, 
+    'Part-1-1.MasterFace24-21', 1), (-1.0, 'Part-1-1.SlaveFace24-21', 1), (
+    -0.00912800025939941, 'Part-1-1.MasterNode', 1)))
+mdb.models['Model-1'].Equation(name='Constraint24-2-21', terms=((1.0, 
+    'Part-1-1.MasterFace24-21', 2), (-1.0, 'Part-1-1.SlaveFace24-21', 2), (
+    -0.0, 'Part-1-1.MasterNode', 1)))
+mdb.models['Model-1'].parts['Part-1'].Set(name='MasterFace24-22', nodes=(
+    mdb.models['Model-1'].parts['Part-1'].nodes[50:51], ))
+mdb.models['Model-1'].parts['Part-1'].Set(name='SlaveFace24-22', nodes=(
+    mdb.models['Model-1'].parts['Part-1'].nodes[130:131], ))
+mdb.models['Model-1'].Equation(name='Constraint24-1-22', terms=((1.0, 
+    'Part-1-1.MasterFace24-22', 1), (-1.0, 'Part-1-1.SlaveFace24-22', 1), (
+    -0.00912800025939941, 'Part-1-1.MasterNode', 1)))
+mdb.models['Model-1'].Equation(name='Constraint24-2-22', terms=((1.0, 
+    'Part-1-1.MasterFace24-22', 2), (-1.0, 'Part-1-1.SlaveFace24-22', 2), (
+    -0.0, 'Part-1-1.MasterNode', 1)))
+mdb.models['Model-1'].parts['Part-1'].Set(name='MasterFace24-23', nodes=(
+    mdb.models['Model-1'].parts['Part-1'].nodes[49:50], ))
+mdb.models['Model-1'].parts['Part-1'].Set(name='SlaveFace24-23', nodes=(
+    mdb.models['Model-1'].parts['Part-1'].nodes[131:132], ))
+mdb.models['Model-1'].Equation(name='Constraint24-1-23', terms=((1.0, 
+    'Part-1-1.MasterFace24-23', 1), (-1.0, 'Part-1-1.SlaveFace24-23', 1), (
+    -0.00912800025939941, 'Part-1-1.MasterNode', 1)))
+mdb.models['Model-1'].Equation(name='Constraint24-2-23', terms=((1.0, 
+    'Part-1-1.MasterFace24-23', 2), (-1.0, 'Part-1-1.SlaveFace24-23', 2), (
+    -0.0, 'Part-1-1.MasterNode', 1)))
+mdb.models['Model-1'].parts['Part-1'].Set(name='MasterFace24-24', nodes=(
+    mdb.models['Model-1'].parts['Part-1'].nodes[48:49], ))
+mdb.models['Model-1'].parts['Part-1'].Set(name='SlaveFace24-24', nodes=(
+    mdb.models['Model-1'].parts['Part-1'].nodes[132:133], ))
+mdb.models['Model-1'].Equation(name='Constraint24-1-24', terms=((1.0, 
+    'Part-1-1.MasterFace24-24', 1), (-1.0, 'Part-1-1.SlaveFace24-24', 1), (
+    -0.00912800025939941, 'Part-1-1.MasterNode', 1)))
+mdb.models['Model-1'].Equation(name='Constraint24-2-24', terms=((1.0, 
+    'Part-1-1.MasterFace24-24', 2), (-1.0, 'Part-1-1.SlaveFace24-24', 2), (
+    -0.0, 'Part-1-1.MasterNode', 1)))
+mdb.models['Model-1'].rootAssembly.regenerate()
+mdb.models['Model-1'].fieldOutputRequests['F-Output-1'].setValues(variables=(
+    'S', 'LE', 'U', 'RF', 'CF', 'IVOL', 'STH'))
+# Save by ejbarbero on 2021_03_12-16.11.33; build 2020 2019_09_13-13.49.31 163176
+from part import *
+from material import *
+from section import *
+from assembly import *
+from step import *
+from interaction import *
+from load import *
+from mesh import *
+from optimization import *
+from job import *
+from sketch import *
+from visualization import *
+from connectorBehavior import *
+mdb.Job(atTime=None, contactPrint=OFF, description='', echoPrint=OFF, 
+    explicitPrecision=SINGLE, getMemoryFromAnalysis=True, historyPrint=OFF, 
+    memory=90, memoryUnits=PERCENTAGE, model='Model-1', modelPrint=OFF, 
+    multiprocessingMode=DEFAULT, name='Job-1', nodalOutputPrecision=SINGLE, 
+    numCpus=1, queue=None, scratch='', type=ANALYSIS, userSubroutine='', 
+    waitHours=0, waitMinutes=0)
+mdb.jobs['Job-1'].setValues(numCpus=8, numDomains=8)
+mdb.jobs['Job-1'].submit(consistencyChecking=OFF)
+mdb.jobs['Job-1'].waitForCompletion()
+# Save by ejbarbero on 2021_03_12-16.38.02; build 2020 2019_09_13-13.49.31 163176
