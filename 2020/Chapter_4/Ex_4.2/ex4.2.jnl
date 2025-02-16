@@ -1,0 +1,335 @@
+# -*- coding: mbcs -*-
+from part import *
+from material import *
+from section import *
+from optimization import *
+from assembly import *
+from step import *
+from interaction import *
+from load import *
+from mesh import *
+from job import *
+from sketch import *
+from visualization import *
+from connectorBehavior import *
+mdb.models['Model-1'].ConstrainedSketch(name='__profile__', sheetSize=2000.0)
+mdb.models['Model-1'].sketches['__profile__'].rectangle(point1=(-500.0, -250.0)
+    , point2=(500.0, 250.0))
+mdb.models['Model-1'].Part(dimensionality=THREE_D, name='Part-1', type=
+    DEFORMABLE_BODY)
+mdb.models['Model-1'].parts['Part-1'].BaseShell(sketch=
+    mdb.models['Model-1'].sketches['__profile__'])
+del mdb.models['Model-1'].sketches['__profile__']
+mdb.models['Model-1'].Material(name='Material-1')
+mdb.models['Model-1'].materials['Material-1'].Elastic(table=((79985.0, 79985.0, 
+    16128.0, 0.044, 0.415, 0.415, 4386.0, 4456.0, 4456.0), ), type=
+    ENGINEERING_CONSTANTS)
+mdb.models['Model-1'].HomogeneousShellSection(idealization=NO_IDEALIZATION, 
+    integrationRule=SIMPSON, material='Material-1', name='Section-1', 
+    nodalThicknessField='', numIntPts=5, poissonDefinition=DEFAULT, 
+    preIntegrate=OFF, temperature=GRADIENT, thickness=10.2, thicknessField='', 
+    thicknessModulus=None, thicknessType=UNIFORM, useDensity=OFF)
+mdb.models['Model-1'].parts['Part-1'].Set(faces=
+    mdb.models['Model-1'].parts['Part-1'].faces.getSequenceFromMask(mask=(
+    '[#1 ]', ), ), name='Set-1')
+mdb.models['Model-1'].parts['Part-1'].SectionAssignment(offset=0.0, 
+    offsetField='', offsetType=MIDDLE_SURFACE, region=
+    mdb.models['Model-1'].parts['Part-1'].sets['Set-1'], sectionName=
+    'Section-1', thicknessAssignment=FROM_SECTION)
+mdb.models['Model-1'].rootAssembly.DatumCsysByDefault(CARTESIAN)
+mdb.models['Model-1'].rootAssembly.Instance(dependent=OFF, name='Part-1-1', 
+    part=mdb.models['Model-1'].parts['Part-1'])
+mdb.models['Model-1'].BuckleStep(name='Step-1', numEigen=10, previous='Initial'
+    , vectors=10)
+mdb.models['Model-1'].rootAssembly.Surface(name='Surf-1', side1Edges=
+    mdb.models['Model-1'].rootAssembly.instances['Part-1-1'].edges.getSequenceFromMask(
+    mask=('[#6 ]', ), ))
+mdb.models['Model-1'].ShellEdgeLoad(createStepName='Step-1', distributionType=
+    UNIFORM, field='', localCsys=None, magnitude=1.0, name='Load-1', region=
+    mdb.models['Model-1'].rootAssembly.surfaces['Surf-1'])
+mdb.models['Model-1'].rootAssembly.Set(edges=
+    mdb.models['Model-1'].rootAssembly.instances['Part-1-1'].edges.getSequenceFromMask(
+    mask=('[#f ]', ), ), name='Set-1')
+mdb.models['Model-1'].DisplacementBC(amplitude=UNSET, createStepName='Initial', 
+    distributionType=UNIFORM, fieldName='', localCsys=None, name='BC-1', 
+    region=mdb.models['Model-1'].rootAssembly.sets['Set-1'], u1=UNSET, u2=UNSET
+    , u3=SET, ur1=UNSET, ur2=UNSET, ur3=UNSET)
+mdb.models['Model-1'].rootAssembly.Set(edges=
+    mdb.models['Model-1'].rootAssembly.instances['Part-1-1'].edges.getSequenceFromMask(
+    mask=('[#8 ]', ), ), name='Set-2')
+mdb.models['Model-1'].DisplacementBC(amplitude=UNSET, createStepName='Initial', 
+    distributionType=UNIFORM, fieldName='', localCsys=None, name='BC-2', 
+    region=mdb.models['Model-1'].rootAssembly.sets['Set-2'], u1=SET, u2=UNSET, 
+    u3=UNSET, ur1=UNSET, ur2=UNSET, ur3=UNSET)
+mdb.models['Model-1'].rootAssembly.Set(edges=
+    mdb.models['Model-1'].rootAssembly.instances['Part-1-1'].edges.getSequenceFromMask(
+    mask=('[#1 ]', ), ), name='Set-3')
+mdb.models['Model-1'].DisplacementBC(amplitude=UNSET, createStepName='Initial', 
+    distributionType=UNIFORM, fieldName='', localCsys=None, name='BC-3', 
+    region=mdb.models['Model-1'].rootAssembly.sets['Set-3'], u1=UNSET, u2=SET, 
+    u3=UNSET, ur1=UNSET, ur2=UNSET, ur3=UNSET)
+mdb.models['Model-1'].rootAssembly.seedPartInstance(deviationFactor=0.1, 
+    minSizeFactor=0.1, regions=(
+    mdb.models['Model-1'].rootAssembly.instances['Part-1-1'], ), size=100.0)
+mdb.models['Model-1'].rootAssembly.setMeshControls(regions=
+    mdb.models['Model-1'].rootAssembly.instances['Part-1-1'].faces.getSequenceFromMask(
+    mask=('[#1 ]', ), ), technique=STRUCTURED)
+mdb.models['Model-1'].rootAssembly.setElementType(elemTypes=(ElemType(
+    elemCode=S8R5, elemLibrary=STANDARD), ElemType(elemCode=STRI65, 
+    elemLibrary=STANDARD)), regions=(
+    mdb.models['Model-1'].rootAssembly.instances['Part-1-1'].faces.getSequenceFromMask(
+    mask=('[#1 ]', ), ), ))
+mdb.models['Model-1'].rootAssembly.generateMesh(regions=(
+    mdb.models['Model-1'].rootAssembly.instances['Part-1-1'], ))
+mdb.Job(atTime=None, contactPrint=OFF, description='', echoPrint=OFF, 
+    explicitPrecision=SINGLE, getMemoryFromAnalysis=True, historyPrint=OFF, 
+    memory=90, memoryUnits=PERCENTAGE, model='Model-1', modelPrint=OFF, 
+    multiprocessingMode=DEFAULT, name='Ex-4-1-a', nodalOutputPrecision=SINGLE, 
+    numCpus=1, numGPUs=0, queue=None, resultsFormat=ODB, scratch='', type=
+    ANALYSIS, userSubroutine='', waitHours=0, waitMinutes=0)
+mdb.jobs['Ex-4-1-a'].submit(consistencyChecking=OFF)
+mdb.jobs['Ex-4-1-a']._Message(STARTED, {'phase': BATCHPRE_PHASE, 
+    'clientHost': 'fer-xps-i7', 'handle': 0, 'jobName': 'Ex-4-1-a'})
+from part import *
+from material import *
+from section import *
+from optimization import *
+from assembly import *
+from step import *
+from interaction import *
+from load import *
+from mesh import *
+from job import *
+from sketch import *
+from visualization import *
+from connectorBehavior import *
+mdb.jobs['Ex-4-1-a']._Message(ODB_FILE, {'phase': BATCHPRE_PHASE, 
+    'file': 'C:\\SIMULIA\\User\\Ex_4.1\\Ex-4-1-a.odb', 'jobName': 'Ex-4-1-a'})
+mdb.jobs['Ex-4-1-a']._Message(COMPLETED, {'phase': BATCHPRE_PHASE, 
+    'message': 'Analysis phase complete', 'jobName': 'Ex-4-1-a'})
+mdb.jobs['Ex-4-1-a']._Message(STARTED, {'phase': STANDARD_PHASE, 
+    'clientHost': 'fer-xps-i7', 'handle': 88, 'jobName': 'Ex-4-1-a'})
+mdb.jobs['Ex-4-1-a']._Message(STEP, {'phase': STANDARD_PHASE, 'stepId': 1, 
+    'jobName': 'Ex-4-1-a'})
+mdb.jobs['Ex-4-1-a']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 'step': 0, 
+    'frame': 0, 'jobName': 'Ex-4-1-a'})
+mdb.jobs['Ex-4-1-a']._Message(MEMORY_ESTIMATE, {'phase': STANDARD_PHASE, 
+    'jobName': 'Ex-4-1-a', 'memory': 25.0})
+mdb.jobs['Ex-4-1-a']._Message(PHYSICAL_MEMORY, {'phase': STANDARD_PHASE, 
+    'physical_memory': 24568.0, 'jobName': 'Ex-4-1-a'})
+mdb.jobs['Ex-4-1-a']._Message(MINIMUM_MEMORY, {'minimum_memory': 15.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'Ex-4-1-a'})
+mdb.jobs['Ex-4-1-a']._Message(MEMORY_ESTIMATE, {'phase': STANDARD_PHASE, 
+    'jobName': 'Ex-4-1-a', 'memory': 27.0})
+mdb.jobs['Ex-4-1-a']._Message(PHYSICAL_MEMORY, {'phase': STANDARD_PHASE, 
+    'physical_memory': 24568.0, 'jobName': 'Ex-4-1-a'})
+mdb.jobs['Ex-4-1-a']._Message(MINIMUM_MEMORY, {'minimum_memory': 17.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'Ex-4-1-a'})
+mdb.jobs['Ex-4-1-a']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 'step': 0, 
+    'frame': 1, 'jobName': 'Ex-4-1-a'})
+mdb.jobs['Ex-4-1-a']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 'step': 0, 
+    'frame': 2, 'jobName': 'Ex-4-1-a'})
+mdb.jobs['Ex-4-1-a']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 'step': 0, 
+    'frame': 3, 'jobName': 'Ex-4-1-a'})
+mdb.jobs['Ex-4-1-a']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 'step': 0, 
+    'frame': 4, 'jobName': 'Ex-4-1-a'})
+mdb.jobs['Ex-4-1-a']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 'step': 0, 
+    'frame': 5, 'jobName': 'Ex-4-1-a'})
+mdb.jobs['Ex-4-1-a']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 'step': 0, 
+    'frame': 6, 'jobName': 'Ex-4-1-a'})
+mdb.jobs['Ex-4-1-a']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 'step': 0, 
+    'frame': 7, 'jobName': 'Ex-4-1-a'})
+mdb.jobs['Ex-4-1-a']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 'step': 0, 
+    'frame': 8, 'jobName': 'Ex-4-1-a'})
+mdb.jobs['Ex-4-1-a']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 'step': 0, 
+    'frame': 9, 'jobName': 'Ex-4-1-a'})
+mdb.jobs['Ex-4-1-a']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 'step': 0, 
+    'frame': 10, 'jobName': 'Ex-4-1-a'})
+mdb.jobs['Ex-4-1-a']._Message(STATUS, {'totalTime': 0.0, 'attempts': 1, 
+    'timeIncrement': 1e-36, 'increment': 1, 'stepTime': 1e-36, 'step': 1, 
+    'jobName': 'Ex-4-1-a', 'severe': 0, 'iterations': 0, 
+    'phase': STANDARD_PHASE, 'equilibrium': 0})
+mdb.jobs['Ex-4-1-a']._Message(END_STEP, {'phase': STANDARD_PHASE, 'stepId': 1, 
+    'jobName': 'Ex-4-1-a'})
+mdb.jobs['Ex-4-1-a']._Message(COMPLETED, {'phase': STANDARD_PHASE, 
+    'message': 'Analysis phase complete', 'jobName': 'Ex-4-1-a'})
+mdb.jobs['Ex-4-1-a']._Message(JOB_COMPLETED, {
+    'time': 'Tue Jul 28 10:00:19 2020', 'jobName': 'Ex-4-1-a'})
+from part import *
+from material import *
+from section import *
+from optimization import *
+from assembly import *
+from step import *
+from interaction import *
+from load import *
+from mesh import *
+from job import *
+from sketch import *
+from visualization import *
+from connectorBehavior import *
+del mdb.models['Model-1'].materials['Material-1']
+del mdb.models['Model-1'].sections['Section-1']
+mdb.models['Model-1'].GeneralStiffnessSection(applyThermalStress=0, name=
+    'Section-1', poissonDefinition=DEFAULT, referenceTemperature=None, 
+    stiffnessMatrix=(817036.0, 35937.6, 817036.0, 0.0, 0.0, 44737.2, 0.0, 0.0, 
+    0.0, 8560000.0, 0.0, 0.0, 0.0, 311579.0, 5610000.0, 0.0, 0.0, 0.0, 0.0, 
+    0.0, 387872.0), useDensity=OFF)
+mdb.models['Model-1'].sections['Section-1'].TransverseShearShell(k11=37812.8, 
+    k12=0.0, k22=37964.7)
+mdb.models['Model-1'].steps['Step-1'].setValues(maxIterations=150)
+mdb.Job(atTime=None, contactPrint=OFF, description='', echoPrint=OFF, 
+    explicitPrecision=SINGLE, getMemoryFromAnalysis=True, historyPrint=OFF, 
+    memory=90, memoryUnits=PERCENTAGE, model='Model-1', modelPrint=OFF, 
+    multiprocessingMode=DEFAULT, name='Ex-4-1-b', nodalOutputPrecision=SINGLE, 
+    numCpus=1, numGPUs=0, queue=None, resultsFormat=ODB, scratch='', type=
+    ANALYSIS, userSubroutine='', waitHours=0, waitMinutes=0)
+mdb.jobs['Ex-4-1-b'].submit(consistencyChecking=OFF)
+mdb.jobs['Ex-4-1-b']._Message(STARTED, {'phase': BATCHPRE_PHASE, 
+    'clientHost': 'fer-xps-i7', 'handle': 0, 'jobName': 'Ex-4-1-b'})
+mdb.jobs['Ex-4-1-b']._Message(ODB_FILE, {'phase': BATCHPRE_PHASE, 
+    'file': 'C:\\SIMULIA\\User\\Ex_4.1\\Ex-4-1-b.odb', 'jobName': 'Ex-4-1-b'})
+from part import *
+from material import *
+from section import *
+from optimization import *
+from assembly import *
+from step import *
+from interaction import *
+from load import *
+from mesh import *
+from job import *
+from sketch import *
+from visualization import *
+from connectorBehavior import *
+mdb.jobs['Ex-4-1-b']._Message(COMPLETED, {'phase': BATCHPRE_PHASE, 
+    'message': 'Analysis phase complete', 'jobName': 'Ex-4-1-b'})
+mdb.jobs['Ex-4-1-b']._Message(STARTED, {'phase': STANDARD_PHASE, 
+    'clientHost': 'fer-xps-i7', 'handle': 464, 'jobName': 'Ex-4-1-b'})
+mdb.jobs['Ex-4-1-b']._Message(STEP, {'phase': STANDARD_PHASE, 'stepId': 1, 
+    'jobName': 'Ex-4-1-b'})
+mdb.jobs['Ex-4-1-b']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 'step': 0, 
+    'frame': 0, 'jobName': 'Ex-4-1-b'})
+mdb.jobs['Ex-4-1-b']._Message(MEMORY_ESTIMATE, {'phase': STANDARD_PHASE, 
+    'jobName': 'Ex-4-1-b', 'memory': 25.0})
+mdb.jobs['Ex-4-1-b']._Message(PHYSICAL_MEMORY, {'phase': STANDARD_PHASE, 
+    'physical_memory': 24568.0, 'jobName': 'Ex-4-1-b'})
+mdb.jobs['Ex-4-1-b']._Message(MINIMUM_MEMORY, {'minimum_memory': 15.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'Ex-4-1-b'})
+mdb.jobs['Ex-4-1-b']._Message(MEMORY_ESTIMATE, {'phase': STANDARD_PHASE, 
+    'jobName': 'Ex-4-1-b', 'memory': 27.0})
+mdb.jobs['Ex-4-1-b']._Message(PHYSICAL_MEMORY, {'phase': STANDARD_PHASE, 
+    'physical_memory': 24568.0, 'jobName': 'Ex-4-1-b'})
+mdb.jobs['Ex-4-1-b']._Message(MINIMUM_MEMORY, {'minimum_memory': 17.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'Ex-4-1-b'})
+mdb.jobs['Ex-4-1-b']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 'step': 0, 
+    'frame': 1, 'jobName': 'Ex-4-1-b'})
+mdb.jobs['Ex-4-1-b']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 'step': 0, 
+    'frame': 2, 'jobName': 'Ex-4-1-b'})
+mdb.jobs['Ex-4-1-b']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 'step': 0, 
+    'frame': 3, 'jobName': 'Ex-4-1-b'})
+mdb.jobs['Ex-4-1-b']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 'step': 0, 
+    'frame': 4, 'jobName': 'Ex-4-1-b'})
+mdb.jobs['Ex-4-1-b']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 'step': 0, 
+    'frame': 5, 'jobName': 'Ex-4-1-b'})
+mdb.jobs['Ex-4-1-b']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 'step': 0, 
+    'frame': 6, 'jobName': 'Ex-4-1-b'})
+mdb.jobs['Ex-4-1-b']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 'step': 0, 
+    'frame': 7, 'jobName': 'Ex-4-1-b'})
+mdb.jobs['Ex-4-1-b']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 'step': 0, 
+    'frame': 8, 'jobName': 'Ex-4-1-b'})
+mdb.jobs['Ex-4-1-b']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 'step': 0, 
+    'frame': 9, 'jobName': 'Ex-4-1-b'})
+mdb.jobs['Ex-4-1-b']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 'step': 0, 
+    'frame': 10, 'jobName': 'Ex-4-1-b'})
+mdb.jobs['Ex-4-1-b']._Message(STATUS, {'totalTime': 0.0, 'attempts': 1, 
+    'timeIncrement': 1e-36, 'increment': 1, 'stepTime': 1e-36, 'step': 1, 
+    'jobName': 'Ex-4-1-b', 'severe': 0, 'iterations': 0, 
+    'phase': STANDARD_PHASE, 'equilibrium': 0})
+mdb.jobs['Ex-4-1-b']._Message(END_STEP, {'phase': STANDARD_PHASE, 'stepId': 1, 
+    'jobName': 'Ex-4-1-b'})
+mdb.jobs['Ex-4-1-b']._Message(COMPLETED, {'phase': STANDARD_PHASE, 
+    'message': 'Analysis phase complete', 'jobName': 'Ex-4-1-b'})
+mdb.jobs['Ex-4-1-b']._Message(JOB_COMPLETED, {
+    'time': 'Tue Jul 28 10:00:54 2020', 'jobName': 'Ex-4-1-b'})
+# Save by ejbarbero on 2020_07_28-17.32.37; build 2020 2019_09_13-13.49.31 163176
+from part import *
+from material import *
+from section import *
+from optimization import *
+from assembly import *
+from step import *
+from interaction import *
+from load import *
+from mesh import *
+from job import *
+from sketch import *
+from visualization import *
+from connectorBehavior import *
+mdb.models['Model-1'].rootAssembly.deleteMesh(regions=(
+    mdb.models['Model-1'].rootAssembly.instances['Part-1-1'], ))
+mdb.models['Model-1'].rootAssembly.seedEdgeByNumber(constraint=FINER, edges=
+    mdb.models['Model-1'].rootAssembly.instances['Part-1-1'].edges.getSequenceFromMask(
+    mask=('[#5 ]', ), ), number=4)
+mdb.models['Model-1'].rootAssembly.seedEdgeByNumber(constraint=FINER, edges=
+    mdb.models['Model-1'].rootAssembly.instances['Part-1-1'].edges.getSequenceFromMask(
+    mask=('[#a ]', ), ), number=2)
+mdb.models['Model-1'].rootAssembly.generateMesh(regions=(
+    mdb.models['Model-1'].rootAssembly.instances['Part-1-1'], ))
+mdb.models['Model-1'].steps['Step-1'].setValues(maxIterations=300)
+mdb.models['Model-1'].rootAssembly.Set(name='x-corner', nodes=
+    mdb.models['Model-1'].rootAssembly.instances['Part-1-1'].nodes.getSequenceFromMask(
+    mask=('[#4010 ]', ), ))
+mdb.models['Model-1'].rootAssembly.Set(name='x-e-corner', nodes=
+    mdb.models['Model-1'].rootAssembly.instances['Part-1-1'].nodes.getSequenceFromMask(
+    mask=('[#200 ]', ), ))
+mdb.models['Model-1'].rootAssembly.Set(name='x-e-mid', nodes=
+    mdb.models['Model-1'].rootAssembly.instances['Part-1-1'].nodes.getSequenceFromMask(
+    mask=('[#4000000 #8 ]', ), ))
+mdb.models['Model-1'].rootAssembly.Set(name='y-corner', nodes=
+    mdb.models['Model-1'].rootAssembly.instances['Part-1-1'].nodes.getSequenceFromMask(
+    mask=('[#4400 ]', ), ))
+mdb.models['Model-1'].rootAssembly.Set(name='y-e-corner', nodes=
+    mdb.models['Model-1'].rootAssembly.instances['Part-1-1'].nodes.getSequenceFromMask(
+    mask=('[#3800 ]', ), ))
+mdb.models['Model-1'].rootAssembly.Set(name='y-e-mid', nodes=
+    mdb.models['Model-1'].rootAssembly.instances['Part-1-1'].nodes.getSequenceFromMask(
+    mask=('[#20000000 #15 ]', ), ))
+del mdb.models['Model-1'].loads['Load-1']
+mdb.models['Model-1'].ConcentratedForce(cf1=-41.67, createStepName='Step-1', 
+    distributionType=UNIFORM, field='', localCsys=None, name='Load-1', region=
+    mdb.models['Model-1'].rootAssembly.sets['x-corner'])
+mdb.models['Model-1'].ConcentratedForce(cf1=-83.33, createStepName='Step-1', 
+    distributionType=UNIFORM, field='', localCsys=None, name='Load-2', region=
+    mdb.models['Model-1'].rootAssembly.sets['x-e-corner'])
+mdb.models['Model-1'].ConcentratedForce(cf1=-166.67, createStepName='Step-1', 
+    distributionType=UNIFORM, field='', localCsys=None, name='Load-3', region=
+    mdb.models['Model-1'].rootAssembly.sets['x-e-mid'])
+mdb.models['Model-1'].ConcentratedForce(cf2=-41.67, createStepName='Step-1', 
+    distributionType=UNIFORM, field='', localCsys=None, name='Load-4', region=
+    mdb.models['Model-1'].rootAssembly.sets['y-corner'])
+mdb.models['Model-1'].ConcentratedForce(cf2=-83.33, createStepName='Step-1', 
+    distributionType=UNIFORM, field='', localCsys=None, name='Load-5', region=
+    mdb.models['Model-1'].rootAssembly.sets['y-e-corner'])
+mdb.models['Model-1'].ConcentratedForce(cf2=-166.67, createStepName='Step-1', 
+    distributionType=UNIFORM, field='', localCsys=None, name='Load-6', region=
+    mdb.models['Model-1'].rootAssembly.sets['y-e-mid'])
+del mdb.jobs['Ex-4-1-a']
+del mdb.jobs['Ex-4-1-b']
+mdb.Job(atTime=None, contactPrint=OFF, description='', echoPrint=OFF, 
+    explicitPrecision=SINGLE, getMemoryFromAnalysis=True, historyPrint=OFF, 
+    memory=90, memoryUnits=PERCENTAGE, model='Model-1', modelPrint=OFF, 
+    multiprocessingMode=DEFAULT, name='Job-1', nodalOutputPrecision=SINGLE, 
+    numCpus=1, numGPUs=0, queue=None, resultsFormat=ODB, scratch='', type=
+    ANALYSIS, userSubroutine='', waitHours=0, waitMinutes=0)
+mdb.jobs['Job-1'].submit(consistencyChecking=OFF)
+mdb.jobs['Job-1'].waitForCompletion()
+mdb.JobFromInputFile(atTime=None, explicitPrecision=SINGLE, 
+    getMemoryFromAnalysis=True, inputFileName=
+    'C:\\SIMULIA\\User\\Ex_4.2\\ABQ.inp', memory=90, memoryUnits=PERCENTAGE, 
+    multiprocessingMode=DEFAULT, name='ABQ', nodalOutputPrecision=SINGLE, 
+    numCpus=1, numGPUs=0, queue=None, resultsFormat=ODB, scratch='', type=
+    ANALYSIS, userSubroutine='', waitHours=0, waitMinutes=0)
+mdb.jobs['ABQ'].submit(consistencyChecking=OFF)
+mdb.jobs['ABQ'].waitForCompletion()
+# Save by ejbarbero on 2020_07_28-17.34.19; build 2020 2019_09_13-13.49.31 163176
