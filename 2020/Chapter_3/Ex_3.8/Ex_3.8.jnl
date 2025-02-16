@@ -1,0 +1,545 @@
+# Save by ejbarbero on 2021_03_24-10.34.22; build 2020 2019_09_13-13.49.31 163176
+from abaqus import *
+upgradeMdb('C:/SIMULIA/User/Chapter_3/Ex_3.8/2020/Ex_3.8-6.10-2.cae', 
+    'C:/SIMULIA/User/Chapter_3/Ex_3.8/2020/Ex_3.8.cae')
+# Save by ejbarbero on 2021_03_24-10.34.22; build 2020 2019_09_13-13.49.31 163176
+from part import *
+from material import *
+from section import *
+from assembly import *
+from step import *
+from interaction import *
+from load import *
+from mesh import *
+from optimization import *
+from job import *
+from sketch import *
+from visualization import *
+from connectorBehavior import *
+mdb.models['Model-1'].fieldOutputRequests['F-Output-1'].setValues(variables=(
+    'S', 'MISES', 'MISESMAX', 'TSHR', 'CTSHR', 'ALPHA', 'TRIAX', 'VS', 'PS', 
+    'CS11', 'ALPHAN', 'SSAVG', 'MISESONLY', 'PRESSONLY', 'SEQUT', 'YIELDPOT', 
+    'E', 'VE', 'PE', 'VEEQ', 'PEEQ', 'PEEQT', 'PEEQMAX', 'PEMAG', 'PEQC', 'EE', 
+    'IE', 'THE', 'NE', 'LE', 'TE', 'TEEQ', 'TEVOL', 'EEQUT', 'ER', 'SE', 'SPE', 
+    'SEPE', 'SEE', 'SEP', 'SALPHA', 'U', 'UT', 'UR', 'V', 'VT', 'VR', 'RBANG', 
+    'RBROT', 'RF', 'RT', 'RM', 'CF', 'SF', 'TF', 'VF', 'ESF1', 'NFORC', 
+    'NFORCSO', 'RBFOR', 'BF', 'CORIOMAG', 'ROTAMAG', 'CENTMAG', 'CENTRIFMAG', 
+    'GRAV', 'P', 'HP', 'TRSHR', 'TRNOR', 'DAMAGEC', 'DAMAGET', 'DAMAGEFT', 
+    'DAMAGEFC', 'DAMAGEMT', 'DAMAGEMC', 'DAMAGESHR', 'SDEG', 'JK', 'CFAILURE', 
+    'DBS', 'DBT', 'DBSF', 'OPENBC', 'CRSTS', 'ENRRT', 'EFENRRTR', 'BDSTAT', 
+    'DMICRT', 'HSNFTCRT', 'HSNFCCRT', 'HSNMTCRT', 'HSNMCCRT', 'ERPRATIO', 
+    'SHRRATIO', 'CSDMG', 'CSMAXSCRT', 'CSMAXUCRT', 'CSQUADSCRT', 'CSQUADUCRT', 
+    'PHILSM', 'PSILSM', 'ENRRTXFEM'))
+mdb.jobs['Job-1'].submit(consistencyChecking=OFF)
+mdb.jobs['Job-1']._Message(STARTED, {'phase': BATCHPRE_PHASE, 
+    'clientHost': 'fer-xps-i7', 'handle': 0, 'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(WARNING, {'phase': BATCHPRE_PHASE, 
+    'message': 'OUTPUT REQUEST PHILSM IS ONLY VALID WITH XFEM', 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(WARNING, {'phase': BATCHPRE_PHASE, 
+    'message': 'OUTPUT REQUEST PSILSM IS ONLY VALID WITH XFEM', 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(WARNING, {'phase': BATCHPRE_PHASE, 
+    'message': 'OUTPUT REQUEST V IS NOT AVAILABLE FOR THIS TYPE OF ANALYSIS', 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(WARNING, {'phase': BATCHPRE_PHASE, 
+    'message': 'OUTPUT REQUEST VF IS NOT AVAILABLE FOR THIS TYPE OF ANALYSIS', 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(WARNING, {'phase': BATCHPRE_PHASE, 
+    'message': 'OUTPUT REQUEST VT IS NOT AVAILABLE FOR THIS TYPE OF ANALYSIS', 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(WARNING, {'phase': BATCHPRE_PHASE, 
+    'message': 'THE REQUEST FOR MISES OUTPUT WILL BE REPLACED BY A REQUEST FOR S OUTPUT', 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(WARNING, {'phase': BATCHPRE_PHASE, 
+    'message': 'OUTPUT VARIABLE ALPHAN HAS NO COMPONENTS IN THIS ANALYSIS FOR ELEMENT TYPE S8R5', 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(WARNING, {'phase': BATCHPRE_PHASE, 
+    'message': 'OUTPUT VARIABLE CFAILURE HAS NO COMPONENTS IN THIS ANALYSIS FOR ELEMENT TYPE S8R5', 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(WARNING, {'phase': BATCHPRE_PHASE, 
+    'message': 'OUTPUT VARIABLE DMICRT HAS NO COMPONENTS IN THIS ANALYSIS FOR ELEMENT TYPE S8R5', 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(WARNING, {'phase': BATCHPRE_PHASE, 
+    'message': 'STRAIN OUTPUT REQUEST LE IS NOT VALID FOR SOME ELEMENTS IN THIS ANALYSIS. THIS REQUEST IS SWITCHED TO THE STRAIN MEASURE, E.', 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(WARNING, {'phase': BATCHPRE_PHASE, 
+    'message': 'STRAIN OUTPUT REQUEST NE IS NOT VALID FOR SOME ELEMENTS IN THIS ANALYSIS. THIS REQUEST IS SWITCHED TO THE STRAIN MEASURE, E.', 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(WARNING, {'phase': BATCHPRE_PHASE, 
+    'message': 'OUTPUT REQUEST YIELDPOT IS NOT AVAILABLE FOR THIS TYPE OF ANALYSIS', 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(WARNING, {'phase': BATCHPRE_PHASE, 
+    'message': 'OUTPUT REQUEST ALPHA IS NOT AVAILABLE FOR ELEMENT TYPE S8R5 WITH SHELL GENERAL SECTION', 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(WARNING, {'phase': BATCHPRE_PHASE, 
+    'message': 'OUTPUT REQUEST CS11 IS NOT AVAILABLE FOR ELEMENT TYPE S8R5 WITH SHELL GENERAL SECTION', 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(WARNING, {'phase': BATCHPRE_PHASE, 
+    'message': 'OUTPUT REQUEST DAMAGEC IS NOT AVAILABLE FOR ELEMENT TYPE S8R5 WITH SHELL GENERAL SECTION', 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(WARNING, {'phase': BATCHPRE_PHASE, 
+    'message': 'OUTPUT REQUEST DAMAGEFC IS NOT AVAILABLE FOR ELEMENT TYPE S8R5 WITH SHELL GENERAL SECTION', 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(WARNING, {'phase': BATCHPRE_PHASE, 
+    'message': 'OUTPUT REQUEST DAMAGEFT IS NOT AVAILABLE FOR ELEMENT TYPE S8R5 WITH SHELL GENERAL SECTION', 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(WARNING, {'phase': BATCHPRE_PHASE, 
+    'message': 'OUTPUT REQUEST DAMAGEMC IS NOT AVAILABLE FOR ELEMENT TYPE S8R5 WITH SHELL GENERAL SECTION', 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(WARNING, {'phase': BATCHPRE_PHASE, 
+    'message': 'OUTPUT REQUEST DAMAGEMT IS NOT AVAILABLE FOR ELEMENT TYPE S8R5 WITH SHELL GENERAL SECTION', 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(WARNING, {'phase': BATCHPRE_PHASE, 
+    'message': 'OUTPUT REQUEST DAMAGESHR IS NOT AVAILABLE FOR ELEMENT TYPE S8R5 WITH SHELL GENERAL SECTION', 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(WARNING, {'phase': BATCHPRE_PHASE, 
+    'message': 'OUTPUT REQUEST DAMAGET IS NOT AVAILABLE FOR ELEMENT TYPE S8R5 WITH SHELL GENERAL SECTION', 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(WARNING, {'phase': BATCHPRE_PHASE, 
+    'message': 'OUTPUT REQUEST EE IS NOT AVAILABLE FOR ELEMENT TYPE S8R5 WITH SHELL GENERAL SECTION', 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(WARNING, {'phase': BATCHPRE_PHASE, 
+    'message': 'OUTPUT REQUEST EEQUT IS NOT AVAILABLE FOR ELEMENT TYPE S8R5 WITH SHELL GENERAL SECTION', 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(WARNING, {'phase': BATCHPRE_PHASE, 
+    'message': 'OUTPUT REQUEST ER IS NOT AVAILABLE FOR ELEMENT TYPE S8R5 WITH SHELL GENERAL SECTION', 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(WARNING, {'phase': BATCHPRE_PHASE, 
+    'message': 'OUTPUT REQUEST ERPRATIO IS NOT AVAILABLE FOR ELEMENT TYPE S8R5 WITH SHELL GENERAL SECTION', 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(WARNING, {'phase': BATCHPRE_PHASE, 
+    'message': 'OUTPUT REQUEST HSNFCCRT IS NOT AVAILABLE FOR ELEMENT TYPE S8R5 WITH SHELL GENERAL SECTION', 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(WARNING, {'phase': BATCHPRE_PHASE, 
+    'message': 'OUTPUT REQUEST HSNFTCRT IS NOT AVAILABLE FOR ELEMENT TYPE S8R5 WITH SHELL GENERAL SECTION', 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(WARNING, {'phase': BATCHPRE_PHASE, 
+    'message': 'OUTPUT REQUEST HSNMCCRT IS NOT AVAILABLE FOR ELEMENT TYPE S8R5 WITH SHELL GENERAL SECTION', 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(WARNING, {'phase': BATCHPRE_PHASE, 
+    'message': 'OUTPUT REQUEST HSNMTCRT IS NOT AVAILABLE FOR ELEMENT TYPE S8R5 WITH SHELL GENERAL SECTION', 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(WARNING, {'phase': BATCHPRE_PHASE, 
+    'message': 'OUTPUT REQUEST IE IS NOT AVAILABLE FOR ELEMENT TYPE S8R5 WITH SHELL GENERAL SECTION', 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(WARNING, {'phase': BATCHPRE_PHASE, 
+    'message': 'OUTPUT REQUEST MISESONLY IS NOT AVAILABLE FOR ELEMENT TYPE S8R5 WITH SHELL GENERAL SECTION', 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(WARNING, {'phase': BATCHPRE_PHASE, 
+    'message': 'OUTPUT REQUEST PE IS NOT AVAILABLE FOR ELEMENT TYPE S8R5 WITH SHELL GENERAL SECTION', 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(WARNING, {'phase': BATCHPRE_PHASE, 
+    'message': 'OUTPUT REQUEST PEEQ IS NOT AVAILABLE FOR ELEMENT TYPE S8R5 WITH SHELL GENERAL SECTION', 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(WARNING, {'phase': BATCHPRE_PHASE, 
+    'message': 'OUTPUT REQUEST PEEQT IS NOT AVAILABLE FOR ELEMENT TYPE S8R5 WITH SHELL GENERAL SECTION', 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(WARNING, {'phase': BATCHPRE_PHASE, 
+    'message': 'OUTPUT REQUEST PEMAG IS NOT AVAILABLE FOR ELEMENT TYPE S8R5 WITH SHELL GENERAL SECTION', 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(WARNING, {'phase': BATCHPRE_PHASE, 
+    'message': 'OUTPUT REQUEST PEQC IS NOT AVAILABLE FOR ELEMENT TYPE S8R5 WITH SHELL GENERAL SECTION', 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(WARNING, {'phase': BATCHPRE_PHASE, 
+    'message': 'OUTPUT REQUEST PRESSONLY IS NOT AVAILABLE FOR ELEMENT TYPE S8R5 WITH SHELL GENERAL SECTION', 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(WARNING, {'phase': BATCHPRE_PHASE, 
+    'message': 'OUTPUT REQUEST PS IS NOT AVAILABLE FOR ELEMENT TYPE S8R5 WITH SHELL GENERAL SECTION', 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(WARNING, {'phase': BATCHPRE_PHASE, 
+    'message': 'OUTPUT REQUEST SDEG IS NOT AVAILABLE FOR ELEMENT TYPE S8R5 WITH SHELL GENERAL SECTION', 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(WARNING, {'phase': BATCHPRE_PHASE, 
+    'message': 'OUTPUT REQUEST SEPE IS NOT AVAILABLE FOR ELEMENT TYPE S8R5 WITH SHELL GENERAL SECTION', 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(WARNING, {'phase': BATCHPRE_PHASE, 
+    'message': 'OUTPUT REQUEST SEQUT IS NOT AVAILABLE FOR ELEMENT TYPE S8R5 WITH SHELL GENERAL SECTION', 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(WARNING, {'phase': BATCHPRE_PHASE, 
+    'message': 'OUTPUT REQUEST SHRRATIO IS NOT AVAILABLE FOR ELEMENT TYPE S8R5 WITH SHELL GENERAL SECTION', 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(WARNING, {'phase': BATCHPRE_PHASE, 
+    'message': 'OUTPUT REQUEST SPE IS NOT AVAILABLE FOR ELEMENT TYPE S8R5 WITH SHELL GENERAL SECTION', 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(WARNING, {'phase': BATCHPRE_PHASE, 
+    'message': 'OUTPUT REQUEST TE IS NOT AVAILABLE FOR ELEMENT TYPE S8R5 WITH SHELL GENERAL SECTION', 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(WARNING, {'phase': BATCHPRE_PHASE, 
+    'message': 'OUTPUT REQUEST TEEQ IS NOT AVAILABLE FOR ELEMENT TYPE S8R5 WITH SHELL GENERAL SECTION', 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(WARNING, {'phase': BATCHPRE_PHASE, 
+    'message': 'OUTPUT REQUEST TEVOL IS NOT AVAILABLE FOR ELEMENT TYPE S8R5 WITH SHELL GENERAL SECTION', 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(WARNING, {'phase': BATCHPRE_PHASE, 
+    'message': 'OUTPUT REQUEST THE IS NOT AVAILABLE FOR ELEMENT TYPE S8R5 WITH SHELL GENERAL SECTION', 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(WARNING, {'phase': BATCHPRE_PHASE, 
+    'message': 'OUTPUT REQUEST TRIAX IS NOT AVAILABLE FOR ELEMENT TYPE S8R5 WITH SHELL GENERAL SECTION', 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(WARNING, {'phase': BATCHPRE_PHASE, 
+    'message': 'OUTPUT REQUEST TSHR IS NOT AVAILABLE FOR ELEMENT TYPE S8R5 WITH SHELL GENERAL SECTION', 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(WARNING, {'phase': BATCHPRE_PHASE, 
+    'message': 'OUTPUT REQUEST VE IS NOT AVAILABLE FOR ELEMENT TYPE S8R5 WITH SHELL GENERAL SECTION', 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(WARNING, {'phase': BATCHPRE_PHASE, 
+    'message': 'OUTPUT REQUEST VEEQ IS NOT AVAILABLE FOR ELEMENT TYPE S8R5 WITH SHELL GENERAL SECTION', 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(WARNING, {'phase': BATCHPRE_PHASE, 
+    'message': 'OUTPUT REQUEST VS IS NOT AVAILABLE FOR ELEMENT TYPE S8R5 WITH SHELL GENERAL SECTION', 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(WARNING, {'phase': BATCHPRE_PHASE, 
+    'message': 'OUTPUT REQUEST ENRRTXFEM IS NOT AVAILABLE FOR ELEMENT TYPE S8R5 WITH SHELL GENERAL SECTION', 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(WARNING, {'phase': BATCHPRE_PHASE, 
+    'message': 'OUTPUT REQUEST ESF1 IS NOT AVAILABLE FOR ELEMENT TYPE S8R5 WITH SHELL GENERAL SECTION', 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(WARNING, {'phase': BATCHPRE_PHASE, 
+    'message': 'OUTPUT REQUEST SALPHA IS NOT AVAILABLE FOR ELEMENT TYPE S8R5 WITH SHELL GENERAL SECTION', 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(WARNING, {'phase': BATCHPRE_PHASE, 
+    'message': 'OUTPUT REQUEST SEE IS NOT AVAILABLE FOR ELEMENT TYPE S8R5 WITH SHELL GENERAL SECTION', 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(WARNING, {'phase': BATCHPRE_PHASE, 
+    'message': 'OUTPUT REQUEST SEP IS NOT AVAILABLE FOR ELEMENT TYPE S8R5 WITH SHELL GENERAL SECTION', 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(WARNING, {'phase': BATCHPRE_PHASE, 
+    'message': 'OUTPUT REQUEST PEEQMAX IS NOT AVAILABLE FOR ELEMENT TYPE S8R5 WITH SHELL GENERAL SECTION', 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(WARNING, {'phase': BATCHPRE_PHASE, 
+    'message': 'OUTPUT REQUEST NFORCSO IS NOT AVAILABLE FOR ELEMENT TYPE S8R5 WITH SHELL GENERAL SECTION', 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(WARNING, {'phase': BATCHPRE_PHASE, 
+    'message': 'OUTPUT REQUEST CF HAS BEEN REMOVED AS THERE ARE NO APPLICABLE LOADS IN THIS STEP', 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(ODB_FILE, {'phase': BATCHPRE_PHASE, 
+    'file': 'C:\\SIMULIA\\User\\Chapter_3\\Ex_3.8\\2020\\Job-1.odb', 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(COMPLETED, {'phase': BATCHPRE_PHASE, 
+    'message': 'Analysis phase complete', 'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(STARTED, {'phase': STANDARD_PHASE, 
+    'clientHost': 'fer-xps-i7', 'handle': 18620, 'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(STEP, {'phase': STANDARD_PHASE, 'stepId': 1, 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 'step': 0, 
+    'frame': 0, 'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(MEMORY_ESTIMATE, {'phase': STANDARD_PHASE, 
+    'jobName': 'Job-1', 'memory': 30.0})
+mdb.jobs['Job-1']._Message(PHYSICAL_MEMORY, {'phase': STANDARD_PHASE, 
+    'physical_memory': 24568.0, 'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(MINIMUM_MEMORY, {'minimum_memory': 22.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 'step': 0, 
+    'frame': 1, 'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(STATUS, {'totalTime': 1.0, 'attempts': 1, 
+    'timeIncrement': 1.0, 'increment': 1, 'stepTime': 1.0, 'step': 1, 
+    'jobName': 'Job-1', 'severe': 0, 'iterations': 1, 'phase': STANDARD_PHASE, 
+    'equilibrium': 1})
+mdb.jobs['Job-1']._Message(END_STEP, {'phase': STANDARD_PHASE, 'stepId': 1, 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(COMPLETED, {'phase': STANDARD_PHASE, 
+    'message': 'Analysis phase complete', 'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(JOB_COMPLETED, {'time': 'Wed Mar 24 10:35:42 2021', 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1'].submit(consistencyChecking=OFF)
+mdb.jobs['Job-1']._Message(STARTED, {'phase': BATCHPRE_PHASE, 
+    'clientHost': 'fer-xps-i7', 'handle': 0, 'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(WARNING, {'phase': BATCHPRE_PHASE, 
+    'message': 'OUTPUT REQUEST PHILSM IS ONLY VALID WITH XFEM', 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(WARNING, {'phase': BATCHPRE_PHASE, 
+    'message': 'OUTPUT REQUEST PSILSM IS ONLY VALID WITH XFEM', 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(WARNING, {'phase': BATCHPRE_PHASE, 
+    'message': 'OUTPUT REQUEST V IS NOT AVAILABLE FOR THIS TYPE OF ANALYSIS', 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(WARNING, {'phase': BATCHPRE_PHASE, 
+    'message': 'OUTPUT REQUEST VF IS NOT AVAILABLE FOR THIS TYPE OF ANALYSIS', 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(WARNING, {'phase': BATCHPRE_PHASE, 
+    'message': 'OUTPUT REQUEST VT IS NOT AVAILABLE FOR THIS TYPE OF ANALYSIS', 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(WARNING, {'phase': BATCHPRE_PHASE, 
+    'message': 'THE REQUEST FOR MISES OUTPUT WILL BE REPLACED BY A REQUEST FOR S OUTPUT', 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(WARNING, {'phase': BATCHPRE_PHASE, 
+    'message': 'OUTPUT VARIABLE ALPHAN HAS NO COMPONENTS IN THIS ANALYSIS FOR ELEMENT TYPE S8R5', 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(WARNING, {'phase': BATCHPRE_PHASE, 
+    'message': 'OUTPUT VARIABLE CFAILURE HAS NO COMPONENTS IN THIS ANALYSIS FOR ELEMENT TYPE S8R5', 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(WARNING, {'phase': BATCHPRE_PHASE, 
+    'message': 'OUTPUT VARIABLE DMICRT HAS NO COMPONENTS IN THIS ANALYSIS FOR ELEMENT TYPE S8R5', 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(WARNING, {'phase': BATCHPRE_PHASE, 
+    'message': 'STRAIN OUTPUT REQUEST LE IS NOT VALID FOR SOME ELEMENTS IN THIS ANALYSIS. THIS REQUEST IS SWITCHED TO THE STRAIN MEASURE, E.', 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(WARNING, {'phase': BATCHPRE_PHASE, 
+    'message': 'STRAIN OUTPUT REQUEST NE IS NOT VALID FOR SOME ELEMENTS IN THIS ANALYSIS. THIS REQUEST IS SWITCHED TO THE STRAIN MEASURE, E.', 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(WARNING, {'phase': BATCHPRE_PHASE, 
+    'message': 'OUTPUT REQUEST YIELDPOT IS NOT AVAILABLE FOR THIS TYPE OF ANALYSIS', 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(WARNING, {'phase': BATCHPRE_PHASE, 
+    'message': 'OUTPUT REQUEST ALPHA IS NOT AVAILABLE FOR ELEMENT TYPE S8R5 WITH SHELL GENERAL SECTION', 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(WARNING, {'phase': BATCHPRE_PHASE, 
+    'message': 'OUTPUT REQUEST CS11 IS NOT AVAILABLE FOR ELEMENT TYPE S8R5 WITH SHELL GENERAL SECTION', 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(WARNING, {'phase': BATCHPRE_PHASE, 
+    'message': 'OUTPUT REQUEST DAMAGEC IS NOT AVAILABLE FOR ELEMENT TYPE S8R5 WITH SHELL GENERAL SECTION', 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(WARNING, {'phase': BATCHPRE_PHASE, 
+    'message': 'OUTPUT REQUEST DAMAGEFC IS NOT AVAILABLE FOR ELEMENT TYPE S8R5 WITH SHELL GENERAL SECTION', 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(WARNING, {'phase': BATCHPRE_PHASE, 
+    'message': 'OUTPUT REQUEST DAMAGEFT IS NOT AVAILABLE FOR ELEMENT TYPE S8R5 WITH SHELL GENERAL SECTION', 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(WARNING, {'phase': BATCHPRE_PHASE, 
+    'message': 'OUTPUT REQUEST DAMAGEMC IS NOT AVAILABLE FOR ELEMENT TYPE S8R5 WITH SHELL GENERAL SECTION', 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(WARNING, {'phase': BATCHPRE_PHASE, 
+    'message': 'OUTPUT REQUEST DAMAGEMT IS NOT AVAILABLE FOR ELEMENT TYPE S8R5 WITH SHELL GENERAL SECTION', 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(WARNING, {'phase': BATCHPRE_PHASE, 
+    'message': 'OUTPUT REQUEST DAMAGESHR IS NOT AVAILABLE FOR ELEMENT TYPE S8R5 WITH SHELL GENERAL SECTION', 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(WARNING, {'phase': BATCHPRE_PHASE, 
+    'message': 'OUTPUT REQUEST DAMAGET IS NOT AVAILABLE FOR ELEMENT TYPE S8R5 WITH SHELL GENERAL SECTION', 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(WARNING, {'phase': BATCHPRE_PHASE, 
+    'message': 'OUTPUT REQUEST EE IS NOT AVAILABLE FOR ELEMENT TYPE S8R5 WITH SHELL GENERAL SECTION', 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(WARNING, {'phase': BATCHPRE_PHASE, 
+    'message': 'OUTPUT REQUEST EEQUT IS NOT AVAILABLE FOR ELEMENT TYPE S8R5 WITH SHELL GENERAL SECTION', 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(WARNING, {'phase': BATCHPRE_PHASE, 
+    'message': 'OUTPUT REQUEST ER IS NOT AVAILABLE FOR ELEMENT TYPE S8R5 WITH SHELL GENERAL SECTION', 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(WARNING, {'phase': BATCHPRE_PHASE, 
+    'message': 'OUTPUT REQUEST ERPRATIO IS NOT AVAILABLE FOR ELEMENT TYPE S8R5 WITH SHELL GENERAL SECTION', 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(WARNING, {'phase': BATCHPRE_PHASE, 
+    'message': 'OUTPUT REQUEST HSNFCCRT IS NOT AVAILABLE FOR ELEMENT TYPE S8R5 WITH SHELL GENERAL SECTION', 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(WARNING, {'phase': BATCHPRE_PHASE, 
+    'message': 'OUTPUT REQUEST HSNFTCRT IS NOT AVAILABLE FOR ELEMENT TYPE S8R5 WITH SHELL GENERAL SECTION', 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(WARNING, {'phase': BATCHPRE_PHASE, 
+    'message': 'OUTPUT REQUEST HSNMCCRT IS NOT AVAILABLE FOR ELEMENT TYPE S8R5 WITH SHELL GENERAL SECTION', 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(WARNING, {'phase': BATCHPRE_PHASE, 
+    'message': 'OUTPUT REQUEST HSNMTCRT IS NOT AVAILABLE FOR ELEMENT TYPE S8R5 WITH SHELL GENERAL SECTION', 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(WARNING, {'phase': BATCHPRE_PHASE, 
+    'message': 'OUTPUT REQUEST IE IS NOT AVAILABLE FOR ELEMENT TYPE S8R5 WITH SHELL GENERAL SECTION', 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(WARNING, {'phase': BATCHPRE_PHASE, 
+    'message': 'OUTPUT REQUEST MISESONLY IS NOT AVAILABLE FOR ELEMENT TYPE S8R5 WITH SHELL GENERAL SECTION', 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(WARNING, {'phase': BATCHPRE_PHASE, 
+    'message': 'OUTPUT REQUEST PE IS NOT AVAILABLE FOR ELEMENT TYPE S8R5 WITH SHELL GENERAL SECTION', 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(WARNING, {'phase': BATCHPRE_PHASE, 
+    'message': 'OUTPUT REQUEST PEEQ IS NOT AVAILABLE FOR ELEMENT TYPE S8R5 WITH SHELL GENERAL SECTION', 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(WARNING, {'phase': BATCHPRE_PHASE, 
+    'message': 'OUTPUT REQUEST PEEQT IS NOT AVAILABLE FOR ELEMENT TYPE S8R5 WITH SHELL GENERAL SECTION', 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(WARNING, {'phase': BATCHPRE_PHASE, 
+    'message': 'OUTPUT REQUEST PEMAG IS NOT AVAILABLE FOR ELEMENT TYPE S8R5 WITH SHELL GENERAL SECTION', 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(WARNING, {'phase': BATCHPRE_PHASE, 
+    'message': 'OUTPUT REQUEST PEQC IS NOT AVAILABLE FOR ELEMENT TYPE S8R5 WITH SHELL GENERAL SECTION', 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(WARNING, {'phase': BATCHPRE_PHASE, 
+    'message': 'OUTPUT REQUEST PRESSONLY IS NOT AVAILABLE FOR ELEMENT TYPE S8R5 WITH SHELL GENERAL SECTION', 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(WARNING, {'phase': BATCHPRE_PHASE, 
+    'message': 'OUTPUT REQUEST PS IS NOT AVAILABLE FOR ELEMENT TYPE S8R5 WITH SHELL GENERAL SECTION', 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(WARNING, {'phase': BATCHPRE_PHASE, 
+    'message': 'OUTPUT REQUEST SDEG IS NOT AVAILABLE FOR ELEMENT TYPE S8R5 WITH SHELL GENERAL SECTION', 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(WARNING, {'phase': BATCHPRE_PHASE, 
+    'message': 'OUTPUT REQUEST SEPE IS NOT AVAILABLE FOR ELEMENT TYPE S8R5 WITH SHELL GENERAL SECTION', 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(WARNING, {'phase': BATCHPRE_PHASE, 
+    'message': 'OUTPUT REQUEST SEQUT IS NOT AVAILABLE FOR ELEMENT TYPE S8R5 WITH SHELL GENERAL SECTION', 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(WARNING, {'phase': BATCHPRE_PHASE, 
+    'message': 'OUTPUT REQUEST SHRRATIO IS NOT AVAILABLE FOR ELEMENT TYPE S8R5 WITH SHELL GENERAL SECTION', 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(WARNING, {'phase': BATCHPRE_PHASE, 
+    'message': 'OUTPUT REQUEST SPE IS NOT AVAILABLE FOR ELEMENT TYPE S8R5 WITH SHELL GENERAL SECTION', 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(WARNING, {'phase': BATCHPRE_PHASE, 
+    'message': 'OUTPUT REQUEST TE IS NOT AVAILABLE FOR ELEMENT TYPE S8R5 WITH SHELL GENERAL SECTION', 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(WARNING, {'phase': BATCHPRE_PHASE, 
+    'message': 'OUTPUT REQUEST TEEQ IS NOT AVAILABLE FOR ELEMENT TYPE S8R5 WITH SHELL GENERAL SECTION', 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(WARNING, {'phase': BATCHPRE_PHASE, 
+    'message': 'OUTPUT REQUEST TEVOL IS NOT AVAILABLE FOR ELEMENT TYPE S8R5 WITH SHELL GENERAL SECTION', 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(WARNING, {'phase': BATCHPRE_PHASE, 
+    'message': 'OUTPUT REQUEST THE IS NOT AVAILABLE FOR ELEMENT TYPE S8R5 WITH SHELL GENERAL SECTION', 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(WARNING, {'phase': BATCHPRE_PHASE, 
+    'message': 'OUTPUT REQUEST TRIAX IS NOT AVAILABLE FOR ELEMENT TYPE S8R5 WITH SHELL GENERAL SECTION', 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(WARNING, {'phase': BATCHPRE_PHASE, 
+    'message': 'OUTPUT REQUEST TSHR IS NOT AVAILABLE FOR ELEMENT TYPE S8R5 WITH SHELL GENERAL SECTION', 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(WARNING, {'phase': BATCHPRE_PHASE, 
+    'message': 'OUTPUT REQUEST VE IS NOT AVAILABLE FOR ELEMENT TYPE S8R5 WITH SHELL GENERAL SECTION', 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(WARNING, {'phase': BATCHPRE_PHASE, 
+    'message': 'OUTPUT REQUEST VEEQ IS NOT AVAILABLE FOR ELEMENT TYPE S8R5 WITH SHELL GENERAL SECTION', 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(WARNING, {'phase': BATCHPRE_PHASE, 
+    'message': 'OUTPUT REQUEST VS IS NOT AVAILABLE FOR ELEMENT TYPE S8R5 WITH SHELL GENERAL SECTION', 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(WARNING, {'phase': BATCHPRE_PHASE, 
+    'message': 'OUTPUT REQUEST ENRRTXFEM IS NOT AVAILABLE FOR ELEMENT TYPE S8R5 WITH SHELL GENERAL SECTION', 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(WARNING, {'phase': BATCHPRE_PHASE, 
+    'message': 'OUTPUT REQUEST ESF1 IS NOT AVAILABLE FOR ELEMENT TYPE S8R5 WITH SHELL GENERAL SECTION', 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(WARNING, {'phase': BATCHPRE_PHASE, 
+    'message': 'OUTPUT REQUEST SALPHA IS NOT AVAILABLE FOR ELEMENT TYPE S8R5 WITH SHELL GENERAL SECTION', 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(WARNING, {'phase': BATCHPRE_PHASE, 
+    'message': 'OUTPUT REQUEST SEE IS NOT AVAILABLE FOR ELEMENT TYPE S8R5 WITH SHELL GENERAL SECTION', 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(WARNING, {'phase': BATCHPRE_PHASE, 
+    'message': 'OUTPUT REQUEST SEP IS NOT AVAILABLE FOR ELEMENT TYPE S8R5 WITH SHELL GENERAL SECTION', 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(WARNING, {'phase': BATCHPRE_PHASE, 
+    'message': 'OUTPUT REQUEST PEEQMAX IS NOT AVAILABLE FOR ELEMENT TYPE S8R5 WITH SHELL GENERAL SECTION', 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(WARNING, {'phase': BATCHPRE_PHASE, 
+    'message': 'OUTPUT REQUEST NFORCSO IS NOT AVAILABLE FOR ELEMENT TYPE S8R5 WITH SHELL GENERAL SECTION', 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(WARNING, {'phase': BATCHPRE_PHASE, 
+    'message': 'OUTPUT REQUEST CF HAS BEEN REMOVED AS THERE ARE NO APPLICABLE LOADS IN THIS STEP', 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(ODB_FILE, {'phase': BATCHPRE_PHASE, 
+    'file': 'C:\\SIMULIA\\User\\Chapter_3\\Ex_3.8\\2020\\Job-1.odb', 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(COMPLETED, {'phase': BATCHPRE_PHASE, 
+    'message': 'Analysis phase complete', 'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(STARTED, {'phase': STANDARD_PHASE, 
+    'clientHost': 'fer-xps-i7', 'handle': 18936, 'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(STEP, {'phase': STANDARD_PHASE, 'stepId': 1, 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 'step': 0, 
+    'frame': 0, 'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(MEMORY_ESTIMATE, {'phase': STANDARD_PHASE, 
+    'jobName': 'Job-1', 'memory': 30.0})
+mdb.jobs['Job-1']._Message(PHYSICAL_MEMORY, {'phase': STANDARD_PHASE, 
+    'physical_memory': 24568.0, 'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(MINIMUM_MEMORY, {'minimum_memory': 22.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 'step': 0, 
+    'frame': 1, 'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(STATUS, {'totalTime': 1.0, 'attempts': 1, 
+    'timeIncrement': 1.0, 'increment': 1, 'stepTime': 1.0, 'step': 1, 
+    'jobName': 'Job-1', 'severe': 0, 'iterations': 1, 'phase': STANDARD_PHASE, 
+    'equilibrium': 1})
+mdb.jobs['Job-1']._Message(END_STEP, {'phase': STANDARD_PHASE, 'stepId': 1, 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(COMPLETED, {'phase': STANDARD_PHASE, 
+    'message': 'Analysis phase complete', 'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(JOB_COMPLETED, {'time': 'Wed Mar 24 10:37:51 2021', 
+    'jobName': 'Job-1'})
+mdb.models['Model-1'].fieldOutputRequests['F-Output-1'].setValues(variables=(
+    'S', 'E', 'U', 'RF', 'CFAILURE'))
+mdb.jobs['Job-1'].submit(consistencyChecking=OFF)
+mdb.jobs['Job-1']._Message(STARTED, {'phase': BATCHPRE_PHASE, 
+    'clientHost': 'fer-xps-i7', 'handle': 0, 'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(WARNING, {'phase': BATCHPRE_PHASE, 
+    'message': 'OUTPUT VARIABLE CFAILURE HAS NO COMPONENTS IN THIS ANALYSIS FOR ELEMENT TYPE S8R5', 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(ODB_FILE, {'phase': BATCHPRE_PHASE, 
+    'file': 'C:\\SIMULIA\\User\\Chapter_3\\Ex_3.8\\2020\\Job-1.odb', 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(COMPLETED, {'phase': BATCHPRE_PHASE, 
+    'message': 'Analysis phase complete', 'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(STARTED, {'phase': STANDARD_PHASE, 
+    'clientHost': 'fer-xps-i7', 'handle': 19792, 'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(STEP, {'phase': STANDARD_PHASE, 'stepId': 1, 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 'step': 0, 
+    'frame': 0, 'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(MEMORY_ESTIMATE, {'phase': STANDARD_PHASE, 
+    'jobName': 'Job-1', 'memory': 30.0})
+mdb.jobs['Job-1']._Message(PHYSICAL_MEMORY, {'phase': STANDARD_PHASE, 
+    'physical_memory': 24568.0, 'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(MINIMUM_MEMORY, {'minimum_memory': 22.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 'step': 0, 
+    'frame': 1, 'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(STATUS, {'totalTime': 1.0, 'attempts': 1, 
+    'timeIncrement': 1.0, 'increment': 1, 'stepTime': 1.0, 'step': 1, 
+    'jobName': 'Job-1', 'severe': 0, 'iterations': 1, 'phase': STANDARD_PHASE, 
+    'equilibrium': 1})
+mdb.jobs['Job-1']._Message(END_STEP, {'phase': STANDARD_PHASE, 'stepId': 1, 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(COMPLETED, {'phase': STANDARD_PHASE, 
+    'message': 'Analysis phase complete', 'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(JOB_COMPLETED, {'time': 'Wed Mar 24 10:39:33 2021', 
+    'jobName': 'Job-1'})
+mdb.models['Model-1'].materials['Material-1'].elastic.FailStress(table=((
+    1830.0, -1096.0, 57.0, -228.0, 71.0, -1.0, 0.0), ))
+# Save by ejbarbero on 2021_03_24-10.41.41; build 2020 2019_09_13-13.49.31 163176
+from part import *
+from material import *
+from section import *
+from assembly import *
+from step import *
+from interaction import *
+from load import *
+from mesh import *
+from optimization import *
+from job import *
+from sketch import *
+from visualization import *
+from connectorBehavior import *
+mdb.jobs['Job-1'].submit(consistencyChecking=OFF)
+mdb.jobs['Job-1']._Message(STARTED, {'phase': BATCHPRE_PHASE, 
+    'clientHost': 'fer-xps-i7', 'handle': 0, 'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(WARNING, {'phase': BATCHPRE_PHASE, 
+    'message': 'NO BIAXIAL STRESS LIMIT GIVEN.  DEFAULT F12 USED.', 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(ODB_FILE, {'phase': BATCHPRE_PHASE, 
+    'file': 'C:\\SIMULIA\\User\\Chapter_3\\Ex_3.8\\2020\\Job-1.odb', 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(COMPLETED, {'phase': BATCHPRE_PHASE, 
+    'message': 'Analysis phase complete', 'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(STARTED, {'phase': STANDARD_PHASE, 
+    'clientHost': 'fer-xps-i7', 'handle': 20388, 'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(STEP, {'phase': STANDARD_PHASE, 'stepId': 1, 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 'step': 0, 
+    'frame': 0, 'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(MEMORY_ESTIMATE, {'phase': STANDARD_PHASE, 
+    'jobName': 'Job-1', 'memory': 30.0})
+mdb.jobs['Job-1']._Message(PHYSICAL_MEMORY, {'phase': STANDARD_PHASE, 
+    'physical_memory': 24568.0, 'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(MINIMUM_MEMORY, {'minimum_memory': 22.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 'step': 0, 
+    'frame': 1, 'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(STATUS, {'totalTime': 1.0, 'attempts': 1, 
+    'timeIncrement': 1.0, 'increment': 1, 'stepTime': 1.0, 'step': 1, 
+    'jobName': 'Job-1', 'severe': 0, 'iterations': 1, 'phase': STANDARD_PHASE, 
+    'equilibrium': 1})
+mdb.jobs['Job-1']._Message(END_STEP, {'phase': STANDARD_PHASE, 'stepId': 1, 
+    'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(COMPLETED, {'phase': STANDARD_PHASE, 
+    'message': 'Analysis phase complete', 'jobName': 'Job-1'})
+mdb.jobs['Job-1']._Message(JOB_COMPLETED, {'time': 'Wed Mar 24 10:42:15 2021', 
+    'jobName': 'Job-1'})
+# Save by ejbarbero on 2021_03_24-10.44.16; build 2020 2019_09_13-13.49.31 163176

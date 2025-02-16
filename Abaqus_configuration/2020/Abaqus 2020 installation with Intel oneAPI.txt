@@ -1,0 +1,100 @@
+How to install Abaqus 2020 with Intel oneAPI, which provides Fortran functionality for user programmable features (UMAT, VUMAt, UGENS, etc.) 
+By Ever J. Barbero
+Updated: 6/21/21
+
+0.  Uninstall Intel Parallel Studio.
+
+1.  Install Abaqus 2020.
+    When asked were to place the default work directory, you are offered C:\temp, 
+    please don't use that, instead use C:\SIMULIA\user
+    
+2.a.    Before installing Intel oneAPI, download VS 2019 Community edition here: 
+https://visualstudio.microsoft.com/thank-you-downloading-visual-studio/?sku=Community&rel=16&src=myvs&utm_medium=microsoft&utm_source=my.visualstudio.com&utm_campaign=download&utm_content=vs+community+2019
+
+2.b.Install with option: 
+        Desktop development with C++. 
+        PS. I installed version 16.10.2
+
+2.c.Download Intel oneAPI Base Toolkit here: 
+https://software.intel.com/content/www/us/en/develop/tools/oneapi/base-toolkit/download.html?operatingsystem=window&distributions=webdownload&options=online
+    You can choose online or local. I chose local to keep a copy of the installation package in case Intel discontinues the product. 
+
+2.d.Install with these options (to save disk space): 
+        Intel oneAPI DPC++/C++ Compiler
+        Threading building blocks
+        DPC++ Library
+        Math Kernel Library
+        DPC++ compatibility tool
+        Distribution for GDB
+        Integrate with MS VS 2019
+    Quit the installer before proceeding to the next step. 
+    This is useful if you encounter problems: 
+https://software.intel.com/content/www/us/en/develop/documentation/get-started-with-intel-oneapi-base-windows/top/before-you-begin.html?cid=oth&campid=iags_install&source=installer
+      
+3.a.Download the HPC toolkit here: 
+https://software.intel.com/content/www/us/en/develop/tools/oneapi/hpc-toolkit/download.html?operatingsystem=window&distributions=webdownload&options=offline
+    You can choose online or local. I chose local to keep a copy of the installation package in case Intel discontinues the product. 
+
+3.b.Install with these options (to save disk space): 
+        Intel oneAPI DPC++/C++ Compiler and Intel C++ Compiler Classic
+        Intel MPI Library
+        Intel Trace Analyzer and Collector
+        Intel Fortran Compiler (Beta) and Intel Fortran Compiler Classic
+        
+4.a.Find vcvarsall.bat
+        It will be in a location `similar' to this:
+        C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build\
+4.b.Find var.bat
+        It will be in a location `similar' to this:
+        C:\Program Files (x86)\Intel\oneAPI\compiler\2021.2.0\env
+4.c.Add both paths to the PATH: 
+        Start > Control Panel > System > Advanced System Settings > Environment Variables > System Variables > Path > Edit > New > OK
+
+5.  In C:/SIMULIA/Commands
+5.a.    Make a backup copy of abq2020.bat > abq2020_original.bat
+        The original looks like this: 
+        @echo off
+        setlocal
+        set ABA_COMMAND=%~nx0
+        set ABA_COMMAND_FULL=%~f0
+        "C:\SIMULIA\EstProducts\2020\win_b64\code\bin\ABQLauncher.exe" %*
+        endlocal
+
+5.b.    Change it to this:
+        call "C:\Program Files (x86)\Intel\oneAPI\setvars.bat" -arch intel64
+        call "C:\Program Files (x86)\Intel\oneAPI\setvars-vcvarsall.bat" -arch intel64
+        @echo off
+        rem setlocal
+        rem set ABA_COMMAND=%~nx0
+        rem set ABA_COMMAND_FULL=%~f0
+        @call
+        "C:\SIMULIA\EstProducts\2020\win_b64\code\bin\ABQLauncher.exe" %*
+        rem endlocal
+
+6.a.   Copy C:\SIMULIA\EstProducts\2020\win_b64\SMA\site\abaqus_v6.env
+        to your default working directory. For me it is at C:\SIMULIA\User\
+        PS. Abaqus will read the file if it exists in your default working directory. This is the recommended way, not to modify the file in C:\SIMULIA\EstProducts\2020\win_b64\SMA\site\. 
+
+6.b.    Add the following Python code at the end of abaqus_v6.env:
+        # Solves problem with naming convention
+        compile_fortran += ['/names:lowercase',]
+        # EJB modification to simplify scripting
+        # Read and execute custom initialization commands
+        def onCaeStartup():
+            ## recoverGeometry for easy parameterization
+            session.journalOptions.setValues(recoverGeometry=COORDINATE)
+            ## session colors
+            session.viewports['Viewport: 1'].viewportAnnotationOptions.setValues(title=OFF)
+            session.graphicsOptions.setValues(backgroundStyle=SOLID, 
+                backgroundColor='#FFFFFF', translucencyMode=2)
+
+        # do not execute onCaeStartup() here, CAE does it!
+        # end modification
+
+7.  Make a backup copy of C:\SIMULIA\EstProducts\2020\win_b64\SMA\site\win86_64.env    
+        Then, modify it by adding 2 lines after 
+            compile_fortran=['ifort',
+        as follows:
+            compile_fortran=['ifort',
+                 '/Qmkl:sequential',    #EJB <-- enable MKL (math library)
+                 '/free', #EJB <-- free format Fortran95, do not use with VUMAT

@@ -1,0 +1,53 @@
+*Heading 
+Example 2.2 FEA of Composite Materials: using Abaqus
+*Part, name=Part1
+*Node
+      1,           0.,           0.
+      2,          10.,           0.
+      3,          20.,           0.
+      4,           0.,          10.
+      5,          10.,          10.
+      6,          20.,          10.
+      7,           0.,          20.
+      8,          10.,          20.
+      9,          20.,          20.
+*Element, type=CPS4R
+ 1,  1,  2,  5,  4
+ 2,  2,  3,  6,  5
+ 3,  4,  5,  8,  7
+ 4,  5,  6,  9,  8
+*Nset, nset=NamedSet, generate
+  1,   9,   1
+*Elset, elset=NamedSet, generate
+  1,   4,   1
+** Section: Section-1
+*Solid Section, elset=NamedSet, material=Material-1
+4.,
+*End Part
+*Assembly, name=Assembly
+*Instance, name=Part1-1, part=Part1
+*End Instance
+*Nset, nset=Nodeset1, internal, instance=Part1-1
+ 1
+*Nset, nset=Nodeset2, internal, instance=Part1-1
+ 4,  7
+*Elset, elset=Elset1, internal, instance=Part1-1
+  2,   4
+*Surface, type=ELEMENT, name=Surface1, internal
+Elset1, S2
+*End Assembly
+*Material, name=Material-1
+*Elastic
+195000., 0.3
+*Step, name=Step-1
+*Static
+1., 1., 1e-05, 1.
+*Boundary
+Nodeset1, 1, 2
+Nodeset2, 1, 1
+*Dsload
+Surface1, P, -9.5
+*Restart, write, frequency=0
+*Output, field, variable=PRESELECT
+*Output, history, variable=PRESELECT
+*End Step
